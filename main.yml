@@ -1,0 +1,7 @@
+---
+# Packages required by the management server
+- import_playbook: common.yml
+# Create a new GCP instance
+- import_playbook: instance.yml
+# Setup the web platform on the new instance
+- import_playbook: web.yml
