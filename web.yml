@@ -1,0 +1,18 @@
+# This playbook is in charge of setting up the new
+# instance's web platform: Gogs.
+---
+- name: install gogs related
+  hosts: new_instances
+  vars_files:
+    - vars.yml
+
+  # switch user
+  become: true
+  become_user: root
+
+  roles:
+    - common
+    - postgresql
+    - gogs
+    - nginx
+    - supervisor
