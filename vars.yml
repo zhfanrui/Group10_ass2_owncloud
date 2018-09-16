@@ -1,0 +1,15 @@
+---
+# these are mainly used for supervisor
+# runtime user, only root is supported by this script.
+default_user: "root"
+default_user_home: "/root"
+
+# configurations for new instance
+instance:
+  name: "gogs-webserver"
+  machine_type: "n1-standard-2"
+  zone: "us-east1-b"
+  image: "debian-9"
+
+# gogs configuration
+port: 3000
