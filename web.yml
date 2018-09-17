@@ -80,7 +80,7 @@
       shell: wget https://raw.githubusercontent.com/mulinShi/key/master/configureOwncloud.yml
 
     - name: run owncloud
-      shell: sudo bash owncloud_install.sh
+      shell: sudo bash configureOwncloud.yml
 
   handlers:
     - name: restart apache2
