@@ -1,82 +1,90 @@
-#!/bin/bash
+---
+- name: install gogs related
+  hosts: new_instances
+  vars_files:
+    - vars.yml
 
-sudo apt-get update
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password dafeifei'
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password dafeifei'
-
-sudo apt-get -y install mysql-server
-sudo apt-get install mysql-client -y
-
-
-HOSTNAME="localhost"  
-
-PORT="3306"
-
-USERNAME="root"
-
-PASSWORD="dafeifei"
-
-DBNAME="owncloud"
-
-sudo apt-get update
-
-sudo apt-get install apache2 -y
-
-sudo apt-get install php7.0 -y
-
-sudo apt-get install libapache2-mod-php7.0
-
-sudo apt-get install php7.0-mysql
-sudo service apache2 start
+  # switch user
+  become: true
+  become_user: root
+  vars:
+    
 
 
-sudo apt-get install php-gd -y
-sudo apt-get install php-zip -y
-sudo apt-get install php-mbstring -y
-sudo apt-get install php-xml -y
-sudo apt-get install php-intl -y
-sudo apt-get install php-curl -y
+  tasks:
+    - name: install all
+      shell: sudo apt-get update
 
-curl https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key | sudo apt-key add -
-echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /' | sudo tee /etc/apt/sources.list.d/owncloud.list
+    - name: configure mysql user
+      shell: wget https://raw.githubusercontent.com/mulinShi/key/master/updateRootForMysql
 
-sudo apt-get update
+    - name: run mysql user
+      shell: sudo bash updateRootForMysql
 
-sudo apt-get install owncloud-files
-sudo systemctl restart apache2
+    - name: install apache
+      become: true
+      apt: name=apache2 state=latest
+      apt: name=apache2-doc state=latest
+      apt: name=apache2-utils state=latest
 
+    - name: install mysql
+      become: true
+      apt:
+        name: mysql-server
+        state: present
+        update_cache: yes
 
-create_db_sql="create database owncloud"
-grant_db_sql="GRANT ALL ON owncloud.* to 'owncloud'@'localhost' IDENTIFIED BY 'dafeifei'"
-sql1="FLUSH PRIVILEGES"
+    - name: install mysql python module
+      become: true
+      apt:
+        name: python-mysqldb
+        state: present
 
-mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} -e "${create_db_sql}"
-mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} -e "${grant_db_sql}"
-mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} -e "${sql1}"
+    - name: start mysql
+      become: true
+      sudo: yes
+      service:
+        name: mysql
+        state: started
+        enabled: true
 
+    - name: php install
+      become: true
+      apt: name=php7.0 state=present
+      apt: name=php7.0-mysql state=present
 
+    - name: install php model
+      become: true
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+      - php
+      - php-mysql
+      - php-gd
+      - php-zip
+      - php-mbstring
+      - php-xml
+      - php-intl
+      - php-curl
 
-echo "Alias /owncloud "/var/www/owncloud/"
-<Directory /var/www/owncloud/>
-  Options +FollowSymlinks
-  AllowOverride All
- <IfModule mod_dav.c>
-  Dav off
- </IfModule>
- SetEnv HOME /var/www/owncloud
- SetEnv HTTP_HOME /var/www/owncloud
-</Directory>" > /etc/apache2/sites-available/owncloud.conf
+    - name: install php extensions
+      become: true
+      apt:
+        name: libapache2-mod-php
+        state: present
+      notify:
+        - restart apache2
 
-ln -s /etc/apache2/sites-available/owncloud.conf /etc/apache2/sites-enabled/owncloud.conf
+    - name: configure owncloud
+      shell: wget https://raw.githubusercontent.com/mulinShi/key/master/configureOwncloud.yml
 
-chown -R www-data:www-data /var/www/owncloud/
+    - name: run owncloud
+      shell: sudo bash configureOwncloud.yml
 
-sudo systemctl restart apache2
-
-cd /var/www/owncloud
-sudo -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="localhost" --database-user="owncloud" --database-pass="dafeifei" --admin-user="owncloud" --admin-pass="dafeifei"
-
-
-cd /var/www/owncloud
-IP=`wget http://ipecho.net/plain -O - -q ; echo`
-sed -i "8c 0 => '$IP'," config/config.php
+  handlers:
+    - name: restart apache2
+      become: true
+      service:
+        name: apache2
+        state: restarted
