@@ -11,5 +11,3 @@ instance:
   zone: "us-east1-b"
   image: "ubuntu-1604-xenial-v20180814"
 
-# gogs configuration
-port: 3000
