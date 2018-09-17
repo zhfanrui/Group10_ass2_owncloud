@@ -9,7 +9,7 @@ instance:
   name: "gogs-webserver"
   machine_type: "n1-standard-2"
   zone: "us-east1-b"
-  image: "debian-9"
+  image: "ubuntu-1604-xenial-v20180814"
 
 # gogs configuration
 port: 3000
