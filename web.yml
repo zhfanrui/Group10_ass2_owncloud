@@ -76,8 +76,8 @@
       notify:
         - restart apache2
 
-#     - name: configure owncloud
-#       shell: wget https://raw.githubusercontent.com/mulinShi/key/master/configureOwncloud.yml
+    - name: configure owncloud
+      shell: wget https://raw.githubusercontent.com/mulinShi/key/master/configureOwncloud.yml
 
     - name: run owncloud
       shell: sudo bash owncloud_install.sh
