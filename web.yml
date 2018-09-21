@@ -5,36 +5,37 @@
     - vars.yml
 
   # switch user
-#   become: true
+  become: true
   become_user: root
     
 
 
   tasks:
     - name: install all
-      shell: sudo apt-get update
+      become: true
+      shell: apt-get update
 
     - name: configure mysql user
-      shell: wget https://raw.githubusercontent.com/mulinShi/key/master/updateRootForMysql
+      get_url: https://raw.githubusercontent.com/mulinShi/key/master/updateRootForMysql
 
     - name: run mysql user
       shell: sudo bash updateRootForMysql
 
     - name: install apache
-#       become: true
+      become: true
       apt: name=apache2 state=latest
       apt: name=apache2-doc state=latest
       apt: name=apache2-utils state=latest
 
     - name: install mysql
-#       become: true
+      become: true
       apt:
         name: mysql-server
         state: present
         update_cache: yes
 
     - name: install mysql python module
-#       become: true
+      become: true
       apt:
         name: python-mysqldb
         state: present
@@ -48,12 +49,12 @@
         enabled: true
 
     - name: php install
-#       become: true
+      become: true
       apt: name=php7.0 state=present
       apt: name=php7.0-mysql state=present
 
     - name: install php model
-#       become: true
+      become: true
       apt:
         name: "{{ item }}"
         state: present
@@ -83,7 +84,7 @@
 
   handlers:
     - name: restart apache2
-#       become: true
+      become: true
       service:
         name: apache2
         state: restarted
