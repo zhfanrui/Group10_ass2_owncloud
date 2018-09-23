@@ -23,11 +23,11 @@
     - name: who
       shell: whoami
       register: name
-   
+
     # create a GCP instance using details in vars.yml
     - name: Launch instances
       gce:
-        instance_names: "{{ instance.name }}"
+        instance_names: "{{ instance_name }}"
         machine_type: "{{ instance.machine_type }}"
         image: "{{ instance.image }}"
         service_account_email: ""
@@ -44,5 +44,5 @@
       with_items: "{{ gce.instance_data }}"
 
     - name: Add host to groupname
-      add_host: hostname={{ item.public_ip }} groupname=new_instances
-      with_items: "{{ gce.instance_data }}"   
+      add_host: hostname={{ item.public_ip }} groupname="{{ instance_group }}"
+      with_items: "{{ gce.instance_data }}"

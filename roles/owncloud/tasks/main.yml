@@ -1,0 +1,5 @@
+- name: configure owncloud
+  shell: wget https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/owncloud_install.sh
+
+- name: run owncloud
+  shell: sudo bash owncloud_install.sh

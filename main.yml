@@ -2,6 +2,15 @@
 # Packages required by the management server
 - import_playbook: common.yml
 # Create a new GCP instance
-- import_playbook: instance.yml
+- include: instance.yml instance_name="{{ item.name }}" instance_group="{{ item.group }}"
+  with_items:
+    name:
+      - haproxy
+      - server1
+      - server2
+    group:
+      - haproxy
+      - server
+      - server
 # Setup the web platform on the new instance
 - import_playbook: web.yml

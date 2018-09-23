@@ -1,0 +1,26 @@
+- name: configure mysql user
+  get_url: https://raw.githubusercontent.com/mulinShi/key/master/updateRootForMysql
+
+- name: run mysql user
+  shell: sudo bash updateRootForMysql
+
+- name: install mysql
+  become: true
+  apt:
+    name: mysql-server
+    state: present
+    update_cache: yes
+
+- name: install mysql python module
+  become: true
+  apt:
+    name: python-mysqldb
+    state: present
+
+- name: start mysql
+#       become: true
+  sudo: yes
+  service:
+    name: mysql
+    state: started
+    enabled: true

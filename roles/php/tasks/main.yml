@@ -1,0 +1,27 @@
+- name: php install
+  become: true
+  apt: name=php7.0 state=present
+  apt: name=php7.0-mysql state=present
+
+- name: install php model
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - php
+  - php-mysql
+  - php-gd
+  - php-zip
+  - php-mbstring
+  - php-xml
+  - php-intl
+  - php-curl
+
+- name: install php extensions
+#       become: true
+  apt:
+    name: libapache2-mod-php
+    state: present
+  notify:
+    - restart apache2
