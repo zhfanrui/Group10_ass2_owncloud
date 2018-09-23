@@ -12,5 +12,11 @@
     - include_tasks: common.yml
     # Create a new GCP instance
     - include_tasks: instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
+      with_items:
+        - {name: haproxy, group: haproxy}
+        - {name: server1, group: server}
+        - {name: server2, group: server}
+      loop_control:
+        loop_var: instances
     # Setup the web platform on the new instance
     - include_tasks: web.yml
