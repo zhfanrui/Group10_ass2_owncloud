@@ -4,11 +4,6 @@
 
 # this playbook also setups up SSH access.
 
-vars_files:
-  - vars.yml
-
-connection: local
-gather_facts: no
 
 - name: download apache-libcloud
   shell: pip install apache-libcloud
