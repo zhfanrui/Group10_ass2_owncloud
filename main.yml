@@ -1,6 +1,12 @@
 ---
 - name: Create instance(s)
   hosts: localhost
+  
+  vars_files:
+    - vars.yml
+
+  connection: local
+  gather_facts: no
   tasks:
     # Packages required by the management server
     - include_tasks: common.yml
