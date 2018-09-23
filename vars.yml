@@ -11,7 +11,3 @@ instance:
   zone: "us-east1-b"
   image: "ubuntu-1604-xenial-v20180814"
 
-instances:
-  - {name: haproxy, group: haproxy}
-  - {name: server1, group: server}
-  - {name: server2, group: server}
