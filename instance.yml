@@ -15,9 +15,6 @@
 - name: who
   shell: whoami
   register: name
-  
-- debug: 
-    var: instance_group
 
 # create a GCP instance using details in vars.yml
 - name: Launch instances
@@ -37,6 +34,10 @@
 - name: Wait for SSH to come up
   wait_for: host={{ item.public_ip }} port=22 delay=10 timeout=60
   with_items: "{{ gce.instance_data }}"
+  
+  
+- debug: 
+    var: instance_group
 
 - name: Add host to groupname
   add_host: hostname={{ item.public_ip }} groupname="{{ instance_group }}"
