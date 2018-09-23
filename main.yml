@@ -11,10 +11,6 @@
     # Packages required by the management server
     - include_tasks: common.yml
     # Create a new GCP instance
-    - include_tasks: instance.yml instance_name="{{ item.name }}" instance_group="{{ item.group }}"
-      with_items:
-        - {name: haproxy, group: haproxy}
-        - {name: server1, group: server}
-        - {name: server2, group: server}
+    - include_tasks: instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
     # Setup the web platform on the new instance
     - include_tasks: web.yml
