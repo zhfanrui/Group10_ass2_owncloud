@@ -23,3 +23,4 @@
         loop_var: instances
     # Setup the web platform on the new instance
     - include_tasks: web.yml
+      hosts: server
