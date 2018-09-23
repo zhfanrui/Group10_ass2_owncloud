@@ -16,6 +16,9 @@
         - {name: haproxy, group: haproxy}
         - {name: server1, group: server}
         - {name: server2, group: server}
+        - {name: database, group: database}
+        - {name: backup, group: backup}
+        - {name: ldap, group: ldap}
       loop_control:
         loop_var: instances
     # Setup the web platform on the new instance
