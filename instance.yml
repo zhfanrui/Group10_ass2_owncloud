@@ -15,6 +15,9 @@
 - name: who
   shell: whoami
   register: name
+  
+- debug: 
+    var: instance_group
 
 # create a GCP instance using details in vars.yml
 - name: Launch instances
