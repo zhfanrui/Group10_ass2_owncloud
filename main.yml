@@ -1,17 +1,18 @@
 ---
-- name: Create instance(s)
+- name: main playbook of all the task for all the kinds of servers
   hosts: localhost
-  
+
   vars_files:
     - vars.yml
 
   connection: local
   gather_facts: no
+
   tasks:
     # Packages required by the management server
-    - include_tasks: common.yml
+    - include_tasks: tasks/common.yml
     # Create a new GCP instance
-    - include_tasks: instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
+    - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
         - {name: haproxy, group: haproxy}
         - {name: server1, group: server}
@@ -22,5 +23,6 @@
       loop_control:
         loop_var: instances
     # Setup the web platform on the new instance
-    - include_tasks: web.yml
+    - include_tasks: tasks/webserver.yml
       hosts: server
+    - include_tasks: tasks/loadbalance.yml

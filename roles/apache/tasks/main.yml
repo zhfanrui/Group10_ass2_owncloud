@@ -1,5 +1,7 @@
 - name: install apache
-  become: true
-  apt: name=apache2 state=latest
-  apt: name=apache2-doc state=latest
-  apt: name=apache2-utils state=latest
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - apache2
+    - apache2-doc
+    - apache2-utils
