@@ -1,7 +1,35 @@
 ---
-# Packages required by the management server
-- import_playbook: common.yml
-# Create a new GCP instance
-- import_playbook: instance.yml
-# Setup the web platform on the new instance
-- import_playbook: web.yml
+- name: main playbook of all the task for all the kinds of servers
+  hosts: localhost
+
+  vars_files:
+    - vars.yml
+
+  connection: local
+  gather_facts: no
+
+  tasks:
+    # Packages required by the management server
+    - include_tasks: tasks/common.yml
+    # Create a new GCP instance
+    - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
+      with_items:
+        - {name: haproxy, group: haproxy}
+        - {name: server1, group: server}
+        - {name: server2, group: server}
+        - {name: database, group: database}
+        - {name: backup, group: backup}
+        - {name: ldap, group: ldap}
+      loop_control:
+        loop_var: instances
+    # Setup the web platform on the new instance
+    - include_tasks: tasks/webserver.yml
+      hosts: server
+    - include_tasks: tasks/loadbalancer.yml
+      hosts: haproxy
+    - include_tasks: tasks/database.yml
+      hosts: database
+    - include_tasks: tasks/ldap.yml
+      hosts: ldap
+    - include_tasks: tasks/backup.yml
+      hosts: backup

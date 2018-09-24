@@ -1,0 +1,30 @@
+# - name: php install
+#   apt: name=php7.0 state=present
+#   apt: name=php7.0-mysql state=present
+
+- name: install php model
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - php
+  - php-mysql
+  - php-gd
+  - php-zip
+  - php-mbstring
+  - php-xml
+  - php-intl
+  - php-curl
+
+- name: install php extensions
+  apt:
+    name: libapache2-mod-php
+  notify:
+    - restart apache2
+
+handlers:
+- name: restart apache2
+  service:
+    name: apache2
+    state: restarted

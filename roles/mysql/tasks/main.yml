@@ -1,0 +1,22 @@
+- name: configure mysql password
+  commond: debconf-set-selections <<< 'mysql-server mysql-server/root_password password "{{ password }}"'
+
+- name: configure mysql password
+  commond: debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password "{{ password }}"'
+
+- name: install mysql
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - mysql-server
+    - mysql-client
+
+- name: install mysql python module
+  apt:
+    name: python-mysqldb
+
+- name: start mysql
+  service:
+    name: mysql
+    state: started
+    enabled: true

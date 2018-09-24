@@ -1,0 +1,7 @@
+- name: install apache
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - apache2
+    - apache2-doc
+    - apache2-utils
