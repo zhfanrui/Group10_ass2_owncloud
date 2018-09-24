@@ -1,5 +1,9 @@
 - name: configure owncloud
   shell: wget https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/owncloud_install.sh
 
+- name: Add an apt key by id from a keyserver
+  apt_key:
+    url: https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key
+
 - name: run owncloud
   shell: sudo bash owncloud_install.sh

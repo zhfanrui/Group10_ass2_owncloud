@@ -11,4 +11,7 @@ instance:
   image: "ubuntu-1604-xenial-v20180814"
 
 database:
-  hostname: "asd"
+  hostname: "localhost"
+  port: "3306"
+  username: "root"
+  dbname: "owncloud"
