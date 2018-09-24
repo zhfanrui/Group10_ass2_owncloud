@@ -1,25 +1,21 @@
-- name: configure mysql user
-  get_url: https://raw.githubusercontent.com/mulinShi/key/master/updateRootForMysql
+- name: configure mysql password
+  commond: debconf-set-selections <<< 'mysql-server mysql-server/root_password password "{{ password }}"'
 
-- name: run mysql user
-  shell: sudo bash updateRootForMysql
+- name: configure mysql password
+  commond: debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password "{{ password }}"'
 
 - name: install mysql
-  become: true
   apt:
-    name: mysql-server
-    state: present
-    update_cache: yes
+    name: "{{ item }}"
+  with_items:
+    - mysql-server
+    - mysql-client
 
 - name: install mysql python module
-  become: true
   apt:
     name: python-mysqldb
-    state: present
 
 - name: start mysql
-#       become: true
-  sudo: yes
   service:
     name: mysql
     state: started
