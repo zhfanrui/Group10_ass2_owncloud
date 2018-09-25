@@ -14,22 +14,38 @@
     # Create a new GCP instance
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
-        - {name: loadbalancer, group: loadbalancer}
-        - {name: server1, group: server}
-        - {name: server2, group: server}
+        # - {name: loadbalancer, group: loadbalancer}
+        # - {name: server1, group: server}
+        # - {name: server2, group: server}
         - {name: database, group: database}
-        - {name: backup, group: backup}
-        - {name: ldap, group: ldap}
+        # - {name: backup, group: backup}
+        # - {name: ldap, group: ldap}
       loop_control:
         loop_var: instances
-    # Setup the web platform on the new instance
-    - include_tasks: tasks/webserver.yml
-      hosts: server
-    - include_tasks: tasks/loadbalancer.yml
-      hosts: haproxy
-    - include_tasks: tasks/database.yml
-      hosts: database
-    - include_tasks: tasks/ldap.yml
-      hosts: ldap
-    - include_tasks: tasks/backup.yml
-      hosts: backup
+
+- hosts: database
+
+  # switch user
+  become: true
+  become_user: root
+
+  roles:
+    - mysql
+  tasks:
+    - name: show all the hosts matching the pattern, i.e. all but the group www
+      debug:
+        msg: "{{ item }}"
+      with_inventory_hostnames:
+        - all:!www
+
+- name: install web server software
+  hosts: server
+
+  # switch user
+  become: true
+  become_user: root
+
+  roles:
+    - apache
+    - php
+    - owncloud
