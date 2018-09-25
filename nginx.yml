@@ -1,0 +1,57 @@
+---
+- name: install and config the nginx
+  hosts: localhost
+
+  # vars_files:
+    # - vars.yml
+
+  connection: local
+  gather_facts: no
+  
+  tasks:
+    - name: install nginx
+      apt:
+        name: nginx
+        
+    - name: download nginx configuration
+      get_utl: 
+        url: "https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/configuration/nginx"
+        dest: /etc/nginx/sites-available/nginx
+        
+    - name: replace new_ip_1
+      replace:
+        dest: /etc/nginx/sites-available/nginx
+        regexp: '@new_ip_1'
+        replace: "35.237.208.32 "
+       # replace: "{{web_ip_1}}"
+         
+    - name: replace new_ip_2
+      replace:
+        dest: /etc/nginx/sites-available/nginx
+        regexp: '@new_ip_2'
+        replace: "35.237.164.22 "
+        #replace: "{{web_ip_2}}"
+    
+    - name: replace ip_address
+      replace:
+        dest: /etc/nginx/sites-available/nginx
+        regexp: '@ip_address'
+        # replace: "{{nginx_ip}}"
+        replace: "35.227.110.87"
+        
+    - name: delete default
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+        
+    - name: create link
+      file:
+        src: /etc/nginx/sites-available/nginx
+        dest: /etc/nginx/sites-enabled/nginx
+        state: link
+        
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+    
