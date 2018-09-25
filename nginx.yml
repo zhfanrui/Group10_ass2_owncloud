@@ -16,7 +16,7 @@
         name: nginx
         
     - name: download nginx configuration
-      get_utl: 
+      get_url: 
         url: "https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/configuration/nginx"
         dest: /etc/nginx/sites-available/nginx
         
