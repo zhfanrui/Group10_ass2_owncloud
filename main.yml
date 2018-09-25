@@ -27,8 +27,8 @@
     #   hosts: server
     # - include_tasks: tasks/loadbalancer.yml
     #   hosts: haproxy
-    - include_tasks: tasks/database.yml
-      hosts: database
+
+- import_playbook: tasks/database.yml
     # - include_tasks: tasks/ldap.yml
     #   hosts: ldap
     # - include_tasks: tasks/backup.yml

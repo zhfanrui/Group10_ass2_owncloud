@@ -1,3 +1,4 @@
 ---
-- roles:
+- host: database
+  roles:
     - mysql
