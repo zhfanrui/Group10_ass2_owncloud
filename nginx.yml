@@ -7,13 +7,14 @@
   # vars_files:
     # - vars.yml
 
-  connection: local
-  gather_facts: no
+#   connection: local
+#   gather_facts: no
   
   tasks:
     - name: install nginx
       apt:
         name: nginx
+        state: latest
         
     - name: download nginx configuration
       get_url: 
@@ -24,14 +25,14 @@
       replace:
         dest: /etc/nginx/sites-available/nginx
         regexp: '@new_ip_1'
-        replace: "35.237.208.32 "
+        replace: "35.227.21.189"
        # replace: "{{web_ip_1}}"
          
     - name: replace new_ip_2
       replace:
         dest: /etc/nginx/sites-available/nginx
         regexp: '@new_ip_2'
-        replace: "35.237.164.22 "
+        replace: "35.237.80.17"
         #replace: "{{web_ip_2}}"
     
     - name: replace ip_address
@@ -39,17 +40,17 @@
         dest: /etc/nginx/sites-available/nginx
         regexp: '@ip_address'
         # replace: "{{nginx_ip}}"
-        replace: "35.227.110.87"
+        replace: "35.237.164.22 "
         
-    - name: delete default
-      file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
+#     - name: delete default
+#       file:
+#         path: /etc/nginx/sites-enabled/default
+#         state: absent
         
     - name: create link
       file:
         src: /etc/nginx/sites-available/nginx
-        dest: /etc/nginx/sites-enabled/nginx
+        dest: /etc/nginx/sites-enabled/default
         state: link
         
     - name: restart nginx
