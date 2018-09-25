@@ -1,6 +1,8 @@
 ---
 - name: install and config the nginx
   hosts: localhost
+  become: true
+  become_user: root
 
   # vars_files:
     # - vars.yml
