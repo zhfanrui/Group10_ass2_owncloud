@@ -22,18 +22,24 @@
         # - {name: ldap, group: ldap}
       loop_control:
         loop_var: instances
-    # Setup the web platform on the new instance
-    # - include_tasks: tasks/webserver.yml
-    #   hosts: server
-    # - include_tasks: tasks/loadbalancer.yml
-    #   hosts: haproxy
 
-# - import_playbook: tasks/database.yml
-    # - include_tasks: tasks/ldap.yml
-    #   hosts: ldap
-    # - include_tasks: tasks/backup.yml
-    #   hosts: backup
+- hosts: database
 
-- host: database
+  # switch user
+  become: true
+  become_user: root
+
   roles:
     - mysql
+
+- name: install web server software
+  hosts: server
+
+  # switch user
+  become: true
+  become_user: root
+
+  roles:
+    - apache
+    - php
+    - owncloud
