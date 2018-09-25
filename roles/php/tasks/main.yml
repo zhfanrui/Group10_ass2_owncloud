@@ -22,9 +22,3 @@
     name: libapache2-mod-php
   notify:
     - restart apache2
-
-handlers:
-- name: restart apache2
-  service:
-    name: apache2
-    state: restarted
