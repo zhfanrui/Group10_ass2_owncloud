@@ -1,8 +1,8 @@
 - name: configure mysql password
-  command: debconf-set-selections <<< 'mysql-server mysql-server/root_password password {{ password }}'
+  command: debconf-set-selections <<< 'mysql-server mysql-server/root_password password 123456'
 
 - name: configure mysql password again
-  command: debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password {{ password }}'
+  command: debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password 123456'
 
 - name: install mysql
   apt:
