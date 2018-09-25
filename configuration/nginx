@@ -1,0 +1,16 @@
+upstream  new_servers  
+{
+    server  @new_ip_1;
+    server  @new_ip_2;
+}
+
+server
+{
+    listen  80;
+    server_name @ip_address;
+ 
+    location / {
+        proxy_pass  @new_ip_1;
+        proxy_pass  @new_ip_2;
+    }
+}
