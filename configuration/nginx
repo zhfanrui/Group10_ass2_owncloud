@@ -1,4 +1,4 @@
-upstream  www.linuxidc.com  
+upstream  new_servers  
 {
     server  @new_ip_1;
     server  @new_ip_2;
