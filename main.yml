@@ -28,8 +28,12 @@
     # - include_tasks: tasks/loadbalancer.yml
     #   hosts: haproxy
 
-- import_playbook: tasks/database.yml
+# - import_playbook: tasks/database.yml
     # - include_tasks: tasks/ldap.yml
     #   hosts: ldap
     # - include_tasks: tasks/backup.yml
     #   hosts: backup
+
+- host: database
+  roles:
+    - mysql
