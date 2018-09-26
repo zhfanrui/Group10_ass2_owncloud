@@ -2,6 +2,7 @@ upstream  new_servers
 {
     server  @new_ip_1;
     server  @new_ip_2;
+    ip_hash;
 }
 
 server
@@ -10,7 +11,7 @@ server
     server_name @ip_address;
  
     location / {
-        proxy_pass  @new_ip_1;
-        proxy_pass  @new_ip_2;
+        proxy_pass http://new_servers ;
+       
     }
 }
