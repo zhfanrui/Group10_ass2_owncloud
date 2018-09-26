@@ -15,5 +15,4 @@ database:
   port: "3306"
   username: "root"
   dbname: "owncloud"
-  password: "123456"
-  
+   
