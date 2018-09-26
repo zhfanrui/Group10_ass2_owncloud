@@ -3,7 +3,7 @@
 - name: download owncloud
   shell: curl https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key | sudo apt-key add -
   
-- name: config owncloud
+- name: configure owncloud
   shell: echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /' | sudo tee /etc/apt/sources.list.d/owncloud.list
 
 - name: install owncloud-files
@@ -22,12 +22,9 @@
     name: owncloud
     login_host: localhost
     login_password: 123456
-    login_user: owncloud
+    login_user: root
     
-- name: refresh db
-  shell: sql1="FLUSH PRIVILEGES"
-  
-- name: 
+
   
 
 
