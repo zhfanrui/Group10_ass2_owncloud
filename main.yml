@@ -23,35 +23,35 @@
       loop_control:
         loop_var: instances
 
-- hosts: database
+# - hosts: database
 
-  # switch user
-  become: true
-  become_user: root
+#   # switch user
+#   become: true
+#   become_user: root
 
-  roles:
-    - mysql
-  tasks:
-    - name: show all the hosts matching the pattern, i.e. all but the group www
-      debug:
-        msg: "{{ item }}"
-      with_inventory_hostnames:
-        - all:!www
+#   roles:
+#     - mysql
+#   tasks:
+#     - name: show all the hosts matching the pattern, i.e. all but the group www
+#       debug:
+#         msg: "{{ item }}"
+#       with_inventory_hostnames:
+#         - all:!www
 
 
 
-- name: install web server software
-  hosts: server
+# - name: install web server software
+#   hosts: server
 
-  # switch user
-  become: true
-  become_user: root
-  gather_facts: no
+#   # switch user
+#   become: true
+#   become_user: root
+#   gather_facts: no
 
-  roles:
-    - apache
-    - php
-    - owncloud
+#   roles:
+#     - apache
+#     - php
+#     - owncloud
 
 
 # =========================================================================================================================
