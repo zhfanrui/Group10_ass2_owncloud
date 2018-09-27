@@ -16,6 +16,12 @@
     update_cache: yes
     upgrade: yes
     
+- name: copying template file
+  copy:
+    src: templates/apache
+    dest: /etc/apache2/sites-available/owncloud.conf
+    
+    
 - name: restart apache2
   systemd:
     name: apache2
