@@ -31,6 +31,6 @@
 - name: grant 
   mysql_user:
     user: root
-    host: all
+    host_all: yes
     priv: 'owncloud.*:ALL'
     state: present
