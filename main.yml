@@ -40,18 +40,18 @@
 
 
 
-# - name: install web server software
-#   hosts: server
+- name: install web server software
+  hosts: server
 
-#   # switch user
-#   become: true
-#   become_user: root
-#   gather_facts: no
+  # switch user
+  become: true
+  become_user: root
+  gather_facts: no
 
-#   roles:
-#     - apache
-#     - php
-#     - owncloud
+  roles:
+    - apache
+    - php
+    - owncloud
 
 
 # =========================================================================================================================
