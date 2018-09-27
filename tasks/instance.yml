@@ -32,16 +32,6 @@
       - http-server
       - database
   register: gce
-  
-  
-- name: Create Firewall Rule w/Source Tags
-  gce_net:
-    name: default
-    credentials_file: ""
-    fwname: "database"
-    allowed: tcp:3306
-    state: "present"
-    src_tags: "database"
 
 - name: Wait for SSH to come up
   wait_for: host={{ item.public_ip }} port=22 delay=10 timeout=60
