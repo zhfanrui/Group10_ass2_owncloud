@@ -34,3 +34,6 @@
     host_all: yes
     priv: 'owncloud.*:ALL'
     state: present
+
+- name: replace
+  shell: sed -i -e '43 s/^/#/' /etc/mysql/mysql.conf.d/mysqld.cnf

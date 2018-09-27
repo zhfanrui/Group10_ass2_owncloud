@@ -35,6 +35,7 @@
     chdir: /var/www/owncloud
   with_inventory_hostnames:
     - database
+
     
 - name: get my public IP
   ipify_facts:
