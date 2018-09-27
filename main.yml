@@ -14,9 +14,9 @@
     # Create a new GCP instance
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
-        # - {name: loadbalancer, group: loadbalancer}
-        # - {name: server1, group: server}
-        # - {name: server2, group: server}
+        - {name: loadbalancer, group: loadbalancer}
+        - {name: server1, group: server}
+        - {name: server2, group: server}
         - {name: database, group: database}
         # - {name: backup, group: backup}
         # - {name: ldap, group: ldap}
@@ -38,15 +38,99 @@
       with_inventory_hostnames:
         - all:!www
 
+
+
 - name: install web server software
   hosts: server
 
   # switch user
   become: true
   become_user: root
+  gather_facts: no
 
   roles:
     - apache
     - php
     - owncloud
 
+
+# =========================================================================================================================
+- name: loadbalancer
+  hosts: loadbalancer
+  become: true
+  become_user: root
+  
+  tasks:
+    - name: install nginx
+      apt:
+        name: nginx
+        state: latest
+        
+    - name: download nginx configuration
+      get_url: 
+        url: "https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/configuration/nginx"
+        dest: /etc/nginx/sites-available/nginx
+        
+    - name: replace new_ip_1
+      replace:
+        dest: /etc/nginx/sites-available/nginx
+        regexp: '@new_ip_1'
+        replace: "{{ item }}"
+        with_inventory_hostnames:
+          - server1
+                
+    - name: replace new_ip_2
+      replace:
+        dest: /etc/nginx/sites-available/nginx
+        regexp: '@new_ip_2'
+        replace: "{{ item }}"
+        with_inventory_hostnames:
+          - server2
+    
+    - name: replace ip_address
+      replace:
+        dest: /etc/nginx/sites-available/nginx
+        regexp: '@ip_address'
+        replace: "{{ item }}"
+        with_inventory_hostnames:
+          - loadbalancer
+        
+#     - name: delete default
+#       file:
+#         path: /etc/nginx/sites-enabled/default
+#         state: absent
+        
+    - name: create link
+      file:
+        src: /etc/nginx/sites-available/nginx
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+        
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+# =========================================================================================================================
+- name: configure owncloud for webserver1
+  hosts: server1
+  become: true
+  become_user: root
+  
+  tasks:
+    - name: configure owncloud configuration
+      shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
+      with_inventory_hostnames:
+        - server1
+        
+        
+- name: configure owncloud for webserver2
+  hosts: server2
+  become: true
+  become_user: root
+  
+  tasks:
+    - name: configure owncloud configuration
+      shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
+      with_inventory_hostnames:
+        - server2

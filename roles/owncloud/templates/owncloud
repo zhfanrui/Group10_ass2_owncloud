@@ -1,0 +1,17 @@
+<?php
+$CONFIG = array (
+  'updatechecker' => false,
+  'passwordsalt' => 'HGC3t9B87WpaTG9ji8WpYdy4WaV7iI',
+  'secret' => 'q3igdCY8X1oeZtjxQl/KXcQKFe5cNiGouMXO+rd7x83H7jcq',
+  'trusted_domains' => 
+  array (
+    0 => 'localhost',
+  ),
+  'datadirectory' => '/var/www/owncloud/data',
+  'overwrite.cli.url' => 'http://localhost',
+  'dbtype' => 'mysql',
+  'version' => '10.0.10.4',
+  'dbname' => 'owncloud',
+  'dbhost' => '@database_ip',
+  'dbtableprefix' => 'oc_',
+);
