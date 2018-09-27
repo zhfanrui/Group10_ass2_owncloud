@@ -21,12 +21,31 @@
     src: templates/apache
     dest: /etc/apache2/sites-available/owncloud.conf
     
+- name: create link  
+  file:
+    src: /etc/apache2/sites-available/owncloud.conf
+    dest: /etc/apache2/sites-enabled/owncloud.conf
+    state: link
     
+- name: get permission
+  shell: chown -R www-data:www-data /var/www/owncloud/
+
 - name: restart apache2
   systemd:
     name: apache2
     state: restarted
     
+- name: occ - maintenance:install
+  shell: sudo -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="localhost" --database-user="owncloud" --database-pass="dafeifei" --admin-user="owncloud" --admin-pass="dafeifei"
+  args:
+    chdir: /var/www/owncloud
+    
+- name: get my public IP
+  ipify_facts:
+
+- name: set config
+  shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," config/config.php
+
 # - name: create database for owncloud
 #   mysql_db：
 #     name: "{{ dbname }}"
@@ -41,5 +60,5 @@
 
 
 
-- name: run owncloud
-  shell: sudo bash owncloud_install.sh
+# - name: run owncloud
+#   shell: sudo bash owncloud_install.sh
