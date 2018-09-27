@@ -1,7 +1,11 @@
 # - name: configure owncloud
 #   shell: wget https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/owncloud_install.sh
-- name: download owncloud
-  shell: curl https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key | sudo apt-key add -
+- name: Add an apt key by id from a keyserver
+  apt_key:
+    url: https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key
+
+# - name: download owncloud
+#   shell: curl https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key | sudo apt-key add -
   
 - name: configure owncloud
   shell: echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /' | sudo tee /etc/apt/sources.list.d/owncloud.list
@@ -17,21 +21,19 @@
     name: apache2
     state: restarted
     
-- name: create database for owncloud
-  mysql_db：
-    name: owncloud
-    login_host: localhost
-    login_password: 123456
-    login_user: root
-    
+# - name: create database for owncloud
+#   mysql_db：
+#     name: "{{ dbname }}"
+#     login_host: "{{ hostname }}"
+#     login_password: "{{ password }}"
+#     login_user: "{{ username }}"
+#     login_port: "{{ port }}"
+#     state: present
 
   
 
 
 
-- name: Add an apt key by id from a keyserver
-  apt_key:
-    url: https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key
 
 - name: run owncloud
   shell: sudo bash owncloud_install.sh
