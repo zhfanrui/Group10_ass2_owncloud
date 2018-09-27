@@ -32,14 +32,7 @@
   mysql_user:
     user: owncloud
     password: "{{ password }}"
-    priv: 'owncloud.*:ALL'
-    state: present
-    
-- name: grant 
-  mysql_user:
-    user: owncloud
-    password: "{{ password }}"
-    host_all: yes
+    host: "%"
     priv: 'owncloud.*:ALL'
     state: present
 
