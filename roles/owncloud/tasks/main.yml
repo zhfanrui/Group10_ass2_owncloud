@@ -13,8 +13,8 @@
 - name: install owncloud-files
   apt:
     name: owncloud-files
-    update_cache: yes
-    upgrade: yes
+#     update_cache: yes
+#     upgrade: yes
     
 - name: copying template file
   copy:
