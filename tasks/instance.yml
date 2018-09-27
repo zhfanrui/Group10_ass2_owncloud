@@ -16,6 +16,14 @@
   shell: whoami
   register: name
 
+- name: Create Firewall Rule w/Source Tags
+  gce_net:
+    name: default
+    fwname: "database"
+    allowed: tcp:3306
+    state: "present"
+    src_tags: "database"
+
 # create a GCP instance using details in vars.yml
 - name: Launch instances
   gce:
@@ -29,6 +37,7 @@
     metadata: "{ 'ssh-keys': '{{ name.stdout_lines.0 }}:{{ publickey.stdout_lines.0 }}' }"
     tags:
       - http-server
+      - database
   register: gce
 
 - name: Wait for SSH to come up
