@@ -28,6 +28,13 @@
     login_password: "{{ password }}"
     login_user: root
 
+- name: create 
+  mysql_user:
+    user: owncloud
+    password: "{{ password }}"
+    priv: 'owncloud.*:ALL'
+    state: present
+    
 - name: grant 
   mysql_user:
     user: owncloud
