@@ -18,7 +18,7 @@
     
 - name: copying template file
   copy:
-    src: templates/apache
+    src: Templates/apache
     dest: /etc/apache2/sites-available/owncloud.conf
     
 - name: create link  
