@@ -36,9 +36,11 @@
     state: restarted
     
 - name: occ - maintenance:install
-  shell: sudo -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="localhost" --database-user="owncloud" --database-pass="dafeifei" --admin-user="owncloud" --admin-pass="dafeifei"
+  shell: sudo -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="{{ item }}" --database-user="owncloud" --database-pass="{{ password }}" --admin-user="owncloud" --admin-pass="{{ password }}"
   args:
     chdir: /var/www/owncloud
+  with_inventory_hostnames:
+    - database
     
 - name: get my public IP
   ipify_facts:
@@ -49,18 +51,18 @@
 #     chdir: /var/www/owncloud
 
 
-- name: copying template file
-  copy:
-    src: templates/owncloud
-    dest: /var/www/owncloud/config/config.php
+# - name: copying template file
+#   copy:
+#     src: templates/owncloud
+#     dest: /var/www/owncloud/config/config.php
 
-- name: replace keywords password
-  replace:
-    dest: /var/www/owncloud/config/config.php
-    regexp: '@database_ip'
-    replace: "{{ item }}"
-    with_inventory_hostnames:
-      - database
+# - name: replace keywords password
+#   replace:
+#     dest: /var/www/owncloud/config/config.php
+#     regexp: '@database_ip'
+#     replace: "{{ item }}"
+#     with_inventory_hostnames:
+#       - database
     
     
 # - name: create database for owncloud
