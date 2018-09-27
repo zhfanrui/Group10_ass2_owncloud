@@ -12,6 +12,6 @@ $CONFIG = array (
   'dbtype' => 'mysql',
   'version' => '10.0.10.4',
   'dbname' => 'owncloud',
-  'dbhost' => 'localhost',
+  'dbhost' => '@database_ip',
   'dbtableprefix' => 'oc_',
 );
