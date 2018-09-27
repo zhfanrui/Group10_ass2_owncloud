@@ -14,7 +14,7 @@
     # Create a new GCP instance
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
-        # - {name: loadbalancer, group: loadbalancer}
+        - {name: loadbalancer, group: loadbalancer}
         - {name: server1, group: server}
 #         - {name: server2, group: server}
         - {name: database, group: database}
