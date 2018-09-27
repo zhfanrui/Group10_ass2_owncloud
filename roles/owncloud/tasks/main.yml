@@ -18,7 +18,7 @@
     state: restarted
     
 - name: create database for owncloud
-  mysql_db：
+  mysql_db:
     name: owncloud
     login_host: localhost
     login_password: 123456
