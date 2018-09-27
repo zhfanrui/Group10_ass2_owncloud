@@ -16,6 +16,14 @@
   shell: whoami
   register: name
   
+- name: Create Firewall Rule w/Source Tags
+   gce_net:
+     name: default
+     credentials_file: ""
+     fwname: "database"
+     allowed: tcp:3306
+     state: "present"
+     src_tags: "database"
 
 # create a GCP instance using details in vars.yml
 - name: Launch instances
