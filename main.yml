@@ -76,24 +76,24 @@
         dest: /etc/nginx/sites-available/nginx
         regexp: '@new_ip_1'
         replace: "{{ item }}"
-        with_inventory_hostnames:
-          - server1
+      with_inventory_hostnames:
+        - server1
                 
     - name: replace new_ip_2
       replace:
         dest: /etc/nginx/sites-available/nginx
         regexp: '@new_ip_2'
         replace: "{{ item }}"
-        with_inventory_hostnames:
-          - server2
+      with_inventory_hostnames:
+        - server2
     
     - name: replace ip_address
       replace:
         dest: /etc/nginx/sites-available/nginx
         regexp: '@ip_address'
         replace: "{{ item }}"
-        with_inventory_hostnames:
-          - loadbalancer
+      with_inventory_hostnames:
+        - loadbalancer
         
 #     - name: delete default
 #       file:
