@@ -18,7 +18,8 @@
 
 - name: Create Firewall Rule w/Source Tags
   gce_net:
-    name: database
+    name: default
+    credentials_file: ""
     fwname: "database"
     allowed: tcp:3306
     state: "present"
