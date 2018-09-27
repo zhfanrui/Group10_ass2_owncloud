@@ -25,7 +25,7 @@
     fwname: "database"
     allowed: tcp:3306
     state: "present"
-    src_tags: "database"
+    target_tags: "database"
 
 # create a GCP instance using details in vars.yml
 - name: Launch instances
