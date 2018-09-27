@@ -20,3 +20,10 @@
     name: mysql
     state: started
     enabled: true
+
+- name: create database for owncloud
+  mysql_db:
+    name: owncloud
+    login_host: localhost
+    login_password: "{{ password }}"
+    login_user: root
