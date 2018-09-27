@@ -45,10 +45,10 @@
 - name: get my public IP
   ipify_facts:
 
-# - name: set config
-#   shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," config/config.php
-#   args:
-#     chdir: /var/www/owncloud
+- name: set config
+  shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," config/config.php
+  args:
+    chdir: /var/www/owncloud
 
 
 # - name: copying template file
