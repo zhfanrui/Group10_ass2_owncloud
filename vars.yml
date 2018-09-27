@@ -8,7 +8,9 @@ default_user_home: "/root"
 instance:
   machine_type: "n1-standard-2"
   zone: "us-east1-b"
-  image: "ubuntu-1604-xenial-v20180814"
+#  image: "ubuntu-1604-xenial-v20180814"
+  image: "ubuntu-1604-lts"
+  
 
 database:
   hostname: "localhost"
