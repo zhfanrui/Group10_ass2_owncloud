@@ -47,11 +47,22 @@
 #   shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," config/config.php
 #   args:
 #     chdir: /var/www/owncloud
+
+
 - name: copying template file
   copy:
     src: templates/owncloud
     dest: /var/www/owncloud/config/config.php
 
+- name: replace keywords password
+  replace:
+    dest: /var/www/owncloud/config/config.php
+    regexp: '@database_ip'
+    replace: "{{ item }}"
+    with_inventory_hostnames:
+      - database
+    
+    
 # - name: create database for owncloud
 #   mysql_db：
 #     name: "{{ dbname }}"
@@ -60,10 +71,6 @@
 #     login_user: "{{ username }}"
 #     login_port: "{{ port }}"
 #     state: present
-
-  
-
-
 
 
 # - name: run owncloud
