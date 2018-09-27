@@ -26,7 +26,8 @@
   file:
     path: /var/www/owncloud/
     recurse: yes
-    owner: www-data:www-data
+    owner: www-data
+    group: www-data
 
 - name: restart apache2
   systemd:
