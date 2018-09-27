@@ -18,7 +18,7 @@
     
 - name: copying template file
   copy:
-    src: Templates/apache
+    src: templates/apache
     dest: /etc/apache2/sites-available/owncloud.conf
     
 - name: create link  
@@ -43,10 +43,14 @@
 - name: get my public IP
   ipify_facts:
 
-- name: set config
-  shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," config/config.php
-  args:
-    chdir: /var/www/owncloud
+# - name: set config
+#   shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," config/config.php
+#   args:
+#     chdir: /var/www/owncloud
+- name: copying template file
+  copy:
+    src: templates/owncloud
+    dest: /var/www/owncloud/config/config.php
 
 # - name: create database for owncloud
 #   mysql_db：
