@@ -1,11 +1,6 @@
-# - name: configure owncloud
-#   shell: wget https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/owncloud_install.sh
 - name: Add an apt key by id from a keyserver
   apt_key:
     url: https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key
-
-# - name: download owncloud
-#   shell: curl https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key | sudo apt-key add -
   
 - name: configure owncloud
   shell: echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /' | sudo tee /etc/apt/sources.list.d/owncloud.list
@@ -14,7 +9,6 @@
   apt:
     name: owncloud-files
     update_cache: yes
-#     upgrade: yes
     
 - name: copying template file
   copy:
@@ -75,5 +69,3 @@
 #     state: present
 
 
-# - name: run owncloud
-#   shell: sudo bash owncloud_install.sh
