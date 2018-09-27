@@ -28,12 +28,12 @@
     login_password: "{{ password }}"
     login_user: root
 
-- name: grant 
-  mysql_user:
-    user: root
-    host_all: yes
-    priv: 'owncloud.*:ALL'
-    state: present
+#- name: grant 
+#  mysql_user:
+#    user: root
+#    host_all: yes
+#    priv: 'owncloud.*:ALL'
+#    state: present
 
 - name: replace
   shell: sed -i -e '43 s/^/#/' /etc/mysql/mysql.conf.d/mysqld.cnf
