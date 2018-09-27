@@ -22,7 +22,12 @@
     state: link
     
 - name: get permission
-  shell: chown -R www-data:www-data /var/www/owncloud/
+#   shell: chown -R www-data:www-data /var/www/owncloud/
+  file:
+    path: /var/www/owncloud/
+    recurse: yes
+    owner: www-data
+    group: www-data
 
 - name: restart apache2
   systemd:
@@ -30,7 +35,9 @@
     state: restarted
     
 - name: occ - maintenance:install
-  shell: sudo -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="{{ item }}" --database-user="owncloud" --database-pass="{{ password }}" --admin-user="owncloud" --admin-pass="{{ password }}"
+  become: yes
+  become_method: sudo
+  shell: -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="{{ item }}" --database-user="owncloud" --database-pass="{{ password }}" --admin-user="owncloud" --admin-pass="{{ password }}"
   args:
     chdir: /var/www/owncloud
   with_inventory_hostnames:
