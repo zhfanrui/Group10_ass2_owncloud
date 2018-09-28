@@ -1,0 +1,27 @@
+- name: install nfs
+  apt:
+    name: nfs-utils
+
+- name: create folder
+  file: path=/vars/www/owncloud state=directory
+- name: create folder
+  file: path=/ownclouddata state=directory
+
+- name: add folder 1
+  lineinfile:
+    path: /etc/exports
+    line: "/vars/www/owncloud {{ item }}(rw)"
+  with_inventory_hostnames:
+    - server
+
+- name: add folder 1
+  lineinfile:
+    path: /etc/exports
+    line: "/ownclouddata {{ item }}(rw)"
+  with_inventory_hostnames:
+    - server
+
+- name: service start
+  service:
+    name: nfs
+    state: started

@@ -14,10 +14,11 @@
     # Create a new GCP instance
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
-#         - {name: loadbalancer, group: loadbalancer}
-#        - {name: server1, group: server}
-        - {name: server2, group: server}
+        # - {name: loadbalancer, group: loadbalancer}
+        - {name: server1, group: server}
+        # - {name: server2, group: server}
         - {name: database, group: database}
+        - {name: nfs, group: nfs}
         #- {name: backup, group: backup}
         #- {name: ldap, group: ldap}
       loop_control:
@@ -31,13 +32,18 @@
 
   roles:
     - mysql
-  tasks:
-    - name: show all the hosts matching the pattern, i.e. all but the group www
-      debug:
-        msg: "{{ item }}"
-      with_inventory_hostnames:
-        - all:!www
 
+- hosts: nfs
+
+  # switch user
+  become: true
+  become_user: root
+
+  roles:
+    # - apache
+    - php
+    - owncloud
+    - nfs
 
 
 - name: install web server software
@@ -51,7 +57,8 @@
   roles:
     - apache
     - php
-    - owncloud
+    - nfsdisk
+    # - owncloud
 
 
 # =========================================================================================================================
@@ -59,26 +66,26 @@
   hosts: loadbalancer
   become: true
   become_user: root
-  
+
   tasks:
     - name: install nginx
       apt:
         name: nginx
         state: latest
-        
+
     - name: download nginx configuration
-      get_url: 
+      get_url:
         url: "https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/configuration/nginx"
         dest: /etc/nginx/sites-available/nginx
-        
-        
+
+
     - name: set config
       shell: sed -i "3i server {{ item }};" nginx
       args:
         chdir: /etc/nginx/sites-available/
       with_inventory_hostnames:
         - server
-        
+
 #     - name: replace new_ip_1
 #       replace:
 #         dest: /etc/nginx/sites-available/nginx
@@ -86,7 +93,7 @@
 #         replace: "{{ item[0] }}"
 #       with_inventory_hostnames:
 #         - server
-                
+
 #     - name: replace new_ip_2
 #       replace:
 #         dest: /etc/nginx/sites-available/nginx
@@ -94,7 +101,7 @@
 #         replace: "{{ item[1] }}"
 #       with_inventory_hostnames:
 #         - server
-    
+
     - name: replace ip_address
       replace:
         dest: /etc/nginx/sites-available/nginx
@@ -102,18 +109,18 @@
         replace: "{{ item }}"
       with_inventory_hostnames:
         - loadbalancer
-        
+
 #     - name: delete default
 #       file:
 #         path: /etc/nginx/sites-enabled/default
 #         state: absent
-        
+
     - name: create link
       file:
         src: /etc/nginx/sites-available/nginx
         dest: /etc/nginx/sites-enabled/default
         state: link
-        
+
     - name: restart nginx
       service:
         name: nginx
@@ -124,19 +131,19 @@
   hosts: server
   become: true
   become_user: root
-  
+
   tasks:
     - name: configure owncloud configuration
       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
       with_inventory_hostnames:
         - server
-        
-        
+
+
 # - name: configure owncloud for webserver2
 #   hosts: server2
 #   become: true
 #   become_user: root
-  
+
 #   tasks:
 #     - name: configure owncloud configuration
 #       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php

@@ -1,0 +1,8 @@
+- name: mount
+  mount:
+    path: /vars/www/owncloud
+    src: "{{ item }}":/vars/www/owncloud
+    fstype: nfs
+    state: mounted
+  with_inventory_hostnames:
+    - nfs
