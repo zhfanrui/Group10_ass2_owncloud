@@ -2,7 +2,7 @@
   apt:
     name: nfs-common
 
-
+# sudo mount -t nfs 35.237.40.49:/vars/www/owncloud /vars/www/owncloud
 - name: mount
   mount:
     path: /vars/www/owncloud
@@ -11,3 +11,27 @@
     state: mounted
   with_inventory_hostnames:
     - nfs
+
+- name: copying template file
+  copy:
+    src: templates/apache
+    dest: /etc/apache2/sites-available/owncloud.conf
+
+- name: create link
+  file:
+    src: /etc/apache2/sites-available/owncloud.conf
+    dest: /etc/apache2/sites-enabled/owncloud.conf
+    state: link
+
+- name: get permission
+#   shell: chown -R www-data:www-data /var/www/owncloud/
+  file:
+    path: /var/www/owncloud/
+    recurse: yes
+    owner: www-data
+    group: www-data
+
+- name: restart apache2
+  systemd:
+    name: apache2
+    state: restarted

@@ -137,7 +137,7 @@
     - name: configure owncloud configuration
       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
       with_inventory_hostnames:
-        - server
+        - nfs
 
 
 # - name: configure owncloud for webserver2
