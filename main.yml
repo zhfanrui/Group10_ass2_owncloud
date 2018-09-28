@@ -24,6 +24,8 @@
       loop_control:
         loop_var: instances
 
+#======================================================================================
+
 - hosts: database
 
   # switch user
@@ -34,6 +36,7 @@
   roles:
     - mysql
 
+#======================================================================================
 - hosts: nfs
 
   # switch user
@@ -46,6 +49,7 @@
     - owncloud
     - nfs
 
+#======================================================================================
 
 - name: install web server software
   hosts: server
@@ -129,7 +133,7 @@
 
 # =========================================================================================================================
 - name: configure owncloud for webserver
-  hosts: server
+  hosts: nfs
   become: true
   become_user: root
 
