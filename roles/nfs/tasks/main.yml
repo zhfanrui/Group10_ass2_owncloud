@@ -14,7 +14,7 @@
   with_inventory_hostnames:
     - server
 
-- name: add folder 1
+- name: add folder 2
   lineinfile:
     path: /etc/exports
     line: "/ownclouddata {{ item }}(rw)"
@@ -23,5 +23,5 @@
 
 - name: service start
   service:
-    name: nfs
-    state: started
+    name: nfs-kernel-server
+    state: restarted
