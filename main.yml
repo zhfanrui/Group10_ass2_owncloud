@@ -71,21 +71,29 @@
         url: "https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/configuration/nginx"
         dest: /etc/nginx/sites-available/nginx
         
-    - name: replace new_ip_1
-      replace:
-        dest: /etc/nginx/sites-available/nginx
-        regexp: '@new_ip_1'
-        replace: "{{ item[0] }}"
+        
+    - name: set config
+      shell: sed -i "3i server {{ item }};" nginx
+      args:
+        chdir: /etc/nginx/sites-available/
       with_inventory_hostnames:
         - server
+        
+#     - name: replace new_ip_1
+#       replace:
+#         dest: /etc/nginx/sites-available/nginx
+#         regexp: '@new_ip_1'
+#         replace: "{{ item[0] }}"
+#       with_inventory_hostnames:
+#         - server
                 
-    - name: replace new_ip_2
-      replace:
-        dest: /etc/nginx/sites-available/nginx
-        regexp: '@new_ip_2'
-        replace: "{{ item[1] }}"
-      with_inventory_hostnames:
-        - server
+#     - name: replace new_ip_2
+#       replace:
+#         dest: /etc/nginx/sites-available/nginx
+#         regexp: '@new_ip_2'
+#         replace: "{{ item[1] }}"
+#       with_inventory_hostnames:
+#         - server
     
     - name: replace ip_address
       replace:
