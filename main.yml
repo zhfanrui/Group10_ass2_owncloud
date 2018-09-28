@@ -113,7 +113,7 @@
 
 # =========================================================================================================================
 - name: configure owncloud for webserver1
-  hosts: server1
+  hosts: server
   become: true
   become_user: root
   
@@ -121,16 +121,16 @@
     - name: configure owncloud configuration
       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
       with_inventory_hostnames:
-        - server1
+        - server
         
         
-- name: configure owncloud for webserver2
-  hosts: server2
-  become: true
-  become_user: root
+# - name: configure owncloud for webserver2
+#   hosts: server2
+#   become: true
+#   become_user: root
   
-  tasks:
-    - name: configure owncloud configuration
-      shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
-      with_inventory_hostnames:
-        - server2
+#   tasks:
+#     - name: configure owncloud configuration
+#       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
+#       with_inventory_hostnames:
+#         - server2
