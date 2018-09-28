@@ -35,6 +35,7 @@
     state: restarted
     
 - name: occ - maintenance:install
+  ignore_errors: yes
   shell: sudo -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="{{ item }}" --database-user="owncloud" --database-pass="{{ password }}" --admin-user="owncloud" --admin-pass="{{ password }}"
   args:
     chdir: /var/www/owncloud
