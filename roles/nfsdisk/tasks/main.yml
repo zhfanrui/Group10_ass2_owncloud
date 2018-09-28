@@ -5,8 +5,8 @@
 # sudo mount -t nfs 35.237.40.49:/vars/www/owncloud /vars/www/owncloud
 - name: mount
   mount:
-    path: /vars/www/owncloud
-    src: "{{ item }}:/vars/www/owncloud"
+    path: /var/www/owncloud
+    src: "{{ item }}:/var/www/owncloud"
     fstype: nfs
     state: mounted
   with_inventory_hostnames:
