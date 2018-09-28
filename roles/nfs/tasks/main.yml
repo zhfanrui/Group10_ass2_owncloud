@@ -3,14 +3,12 @@
     name: nfs-kernel-server
 
 - name: create folder
-  file: path=/vars/www/owncloud state=directory
-- name: create folder
   file: path=/ownclouddata state=directory
 
 - name: add folder 1
   lineinfile:
     path: /etc/exports
-    line: "/vars/www/owncloud {{ item }}(rw)"
+    line: "/var/www/owncloud {{ item }}(rw)"
   with_inventory_hostnames:
     - server
 
