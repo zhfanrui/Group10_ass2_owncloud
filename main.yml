@@ -14,7 +14,7 @@
     # Create a new GCP instance
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
-        - {name: loadbalancer, group: loadbalancer}
+#         - {name: loadbalancer, group: loadbalancer}
         - {name: server1, group: server}
         - {name: server2, group: server}
         - {name: database, group: database}
@@ -71,21 +71,29 @@
         url: "https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/configuration/nginx"
         dest: /etc/nginx/sites-available/nginx
         
-    - name: replace new_ip_1
-      replace:
-        dest: /etc/nginx/sites-available/nginx
-        regexp: '@new_ip_1'
-        replace: "{{ item }}"
+        
+    - name: set config
+      shell: sed -i "3i server {{ item }};" nginx
+      args:
+        chdir: /etc/nginx/sites-available/
       with_inventory_hostnames:
-        - server1
+        - server
+        
+#     - name: replace new_ip_1
+#       replace:
+#         dest: /etc/nginx/sites-available/nginx
+#         regexp: '@new_ip_1'
+#         replace: "{{ item[0] }}"
+#       with_inventory_hostnames:
+#         - server
                 
-    - name: replace new_ip_2
-      replace:
-        dest: /etc/nginx/sites-available/nginx
-        regexp: '@new_ip_2'
-        replace: "{{ item }}"
-      with_inventory_hostnames:
-        - server2
+#     - name: replace new_ip_2
+#       replace:
+#         dest: /etc/nginx/sites-available/nginx
+#         regexp: '@new_ip_2'
+#         replace: "{{ item[1] }}"
+#       with_inventory_hostnames:
+#         - server
     
     - name: replace ip_address
       replace:
@@ -113,7 +121,7 @@
 
 # =========================================================================================================================
 - name: configure owncloud for webserver1
-  hosts: server1
+  hosts: server
   become: true
   become_user: root
   
@@ -121,16 +129,16 @@
     - name: configure owncloud configuration
       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
       with_inventory_hostnames:
-        - server1
+        - server
         
         
-- name: configure owncloud for webserver2
-  hosts: server2
-  become: true
-  become_user: root
+# - name: configure owncloud for webserver2
+#   hosts: server2
+#   become: true
+#   become_user: root
   
-  tasks:
-    - name: configure owncloud configuration
-      shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
-      with_inventory_hostnames:
-        - server2
+#   tasks:
+#     - name: configure owncloud configuration
+#       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
+#       with_inventory_hostnames:
+#         - server2

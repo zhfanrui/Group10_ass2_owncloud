@@ -1,7 +1,6 @@
 upstream  new_servers  
 {
-    server  @new_ip_1;
-    server  @new_ip_2;
+   
     ip_hash;
 }
 
