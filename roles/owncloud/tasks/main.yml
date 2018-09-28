@@ -1,7 +1,7 @@
 - name: Add an apt key by id from a keyserver
   apt_key:
     url: https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key
-  
+
 - name: configure owncloud
   shell: echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /' | sudo tee /etc/apt/sources.list.d/owncloud.list
 
@@ -9,31 +9,7 @@
   apt:
     name: owncloud-files
     update_cache: yes
-    
-- name: copying template file
-  copy:
-    src: templates/apache
-    dest: /etc/apache2/sites-available/owncloud.conf
-    
-- name: create link  
-  file:
-    src: /etc/apache2/sites-available/owncloud.conf
-    dest: /etc/apache2/sites-enabled/owncloud.conf
-    state: link
-    
-- name: get permission
-#   shell: chown -R www-data:www-data /var/www/owncloud/
-  file:
-    path: /var/www/owncloud/
-    recurse: yes
-    owner: www-data
-    group: www-data
 
-- name: restart apache2
-  systemd:
-    name: apache2
-    state: restarted
-    
 - name: occ - maintenance:install
   ignore_errors: yes
   shell: sudo -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="{{ item }}" --database-user="owncloud" --database-pass="{{ password }}" --admin-user="owncloud" --admin-pass="{{ password }}"
@@ -42,14 +18,13 @@
   with_inventory_hostnames:
     - database
 
-    
-- name: get my public IP
-  ipify_facts:
+# - name: get my public IP
+#   ipify_facts:
 
-- name: set config
-  shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," config/config.php
-  args:
-    chdir: /var/www/owncloud
+# - name: set config
+#   shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," /var/www/owncloud/config/config.php
+#   args:
+#     chdir: /var/www/owncloud
 
 
 # - name: copying template file
@@ -64,8 +39,8 @@
 #     replace: "{{ item }}"
 #     with_inventory_hostnames:
 #       - database
-    
-    
+
+
 # - name: create database for owncloud
 #   mysql_db：
 #     name: "{{ dbname }}"
