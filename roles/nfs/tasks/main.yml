@@ -1,6 +1,6 @@
 - name: install nfs
   apt:
-    name: nfs-utils
+    name: nfs-kernel-server
 
 - name: create folder
   file: path=/vars/www/owncloud state=directory
