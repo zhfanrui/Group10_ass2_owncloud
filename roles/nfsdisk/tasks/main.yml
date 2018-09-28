@@ -1,3 +1,8 @@
+- name: apt install nfs-common
+  apt:
+    name: nfs-common
+
+
 - name: mount
   mount:
     path: /vars/www/owncloud
