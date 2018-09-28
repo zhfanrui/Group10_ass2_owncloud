@@ -14,9 +14,9 @@
     # Create a new GCP instance
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
-        # - {name: loadbalancer, group: loadbalancer}
+        - {name: loadbalancer, group: loadbalancer}
         - {name: server1, group: server}
-        # - {name: server2, group: server}
+        - {name: server2, group: server}
         - {name: database, group: database}
         - {name: nfs, group: nfs}
         #- {name: backup, group: backup}
@@ -128,16 +128,21 @@
         state: restarted
 
 # =========================================================================================================================
-- name: configure owncloud for webserver1
+- name: configure owncloud for webserver
   hosts: server
   become: true
   become_user: root
 
   tasks:
+
+    # - name: set config
+    #   shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," /var/www/owncloud/config/config.php
+
     - name: configure owncloud configuration
       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
       with_inventory_hostnames:
-        - nfs
+        - loadbalancer
+
 
 
 # - name: configure owncloud for webserver2
