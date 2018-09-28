@@ -15,8 +15,8 @@
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
 #         - {name: loadbalancer, group: loadbalancer}
-        - {name: server1, group: server1}
-        - {name: server2, group: server2}
+        - {name: server1, group: server}
+#         - {name: server2, group: server}
         - {name: database, group: database}
         #- {name: backup, group: backup}
         #- {name: ldap, group: ldap}
@@ -40,38 +40,39 @@
 
 
 
-# - name: install web server software
-#   hosts: server
+- name: install web server software
+  hosts: server
 
-#   # switch user
+  # switch user
+  become: true
+  become_user: root
+  gather_facts: no
+
+  roles:
+    - apache
+    - php
+    - owncloud
+    
+    
+# - name: configure owncloud respectively - 1
+#   hosts: server1
 #   become: true
 #   become_user: root
-#   gather_facts: no
-
+  
 #   roles:
 #     - apache
 #     - php
-    
-    
-- name: configure owncloud respectively - 1
-  hosts: server1
-  become: true
-  become_user: root
-  
-  roles:
-    - apache
-    - php
-    - owncloud
+#     - owncloud
 
-- name: configure owncloud respectively - 2
-  hosts: server2
-  become: true
-  become_user: root
+# - name: configure owncloud respectively - 2
+#   hosts: server2
+#   become: true
+#   become_user: root
   
-  roles:
-    - apache
-    - php
-    - owncloud
+#   roles:
+#     - apache
+#     - php
+#     - owncloud
 
 # =========================================================================================================================
 - name: loadbalancer
