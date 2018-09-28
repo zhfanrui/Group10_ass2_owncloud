@@ -49,7 +49,7 @@
   gather_facts: no
 
   roles:
-    - apache
+#     - apache
     - php
     - owncloud
     
