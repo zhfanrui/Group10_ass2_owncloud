@@ -17,14 +17,14 @@
 - name: add folder 1
   lineinfile:
     path: /etc/exports
-    line: "/var/www/owncloud {{ item }}(rw)"
+    line: "/var/www/owncloud {{ item }}(rw,no_root_squash)"
   with_inventory_hostnames:
     - server
 
 - name: add folder 2
   lineinfile:
     path: /etc/exports
-    line: "/ownclouddata {{ item }}(rw)"
+    line: "/ownclouddata {{ item }}(rw,no_root_squash)"
   with_inventory_hostnames:
     - server
 
