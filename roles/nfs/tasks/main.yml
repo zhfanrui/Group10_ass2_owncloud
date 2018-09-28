@@ -4,21 +4,30 @@
 
 - name: create folder
   file: path=/vars/www/owncloud state=directory
-
+  
 - name: create folder
   file: path=/ownclouddata state=directory
+  
+- name: get permission
+#   shell: chown -R www-data:www-data /var/www/owncloud/
+  file:
+    path: /var/www/owncloud
+    recurse: yes
+    owner: www-data
+    group: www-data
+    mode: 0777
 
 - name: add folder 1
   lineinfile:
     path: /etc/exports
-    line: "/vars/www/owncloud {{ item }}(rw)"
+    line: "/var/www/owncloud {{ item }}(rw,no_root_squash)"
   with_inventory_hostnames:
     - server
 
 - name: add folder 2
   lineinfile:
     path: /etc/exports
-    line: "/ownclouddata {{ item }}(rw)"
+    line: "/ownclouddata {{ item }}(rw,no_root_squash)"
   with_inventory_hostnames:
     - server
 
