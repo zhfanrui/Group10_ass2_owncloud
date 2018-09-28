@@ -75,17 +75,17 @@
       replace:
         dest: /etc/nginx/sites-available/nginx
         regexp: '@new_ip_1'
-        replace: "{{ item }}"
+        replace: "{{ item[0] }}"
       with_inventory_hostnames:
-        - server1
+        - server
                 
     - name: replace new_ip_2
       replace:
         dest: /etc/nginx/sites-available/nginx
         regexp: '@new_ip_2'
-        replace: "{{ item }}"
+        replace: "{{ item[1] }}"
       with_inventory_hostnames:
-        - server2
+        - server
     
     - name: replace ip_address
       replace:
