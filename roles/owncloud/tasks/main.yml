@@ -10,31 +10,6 @@
     name: owncloud-files
     update_cache: yes
 
-
-- name: copying template file
-  copy:
-    src: templates/apache
-    dest: /etc/apache2/sites-available/owncloud.conf
-
-- name: create link
-  file:
-    src: /etc/apache2/sites-available/owncloud.conf
-    dest: /etc/apache2/sites-enabled/owncloud.conf
-    state: link
-
-- name: get permission
-#   shell: chown -R www-data:www-data /var/www/owncloud/
-  file:
-    path: /var/www/owncloud/
-    recurse: yes
-    owner: www-data
-    group: www-data
-
-- name: restart apache2
-  systemd:
-    name: apache2
-    state: restarted
-
 - name: occ - maintenance:install
   ignore_errors: yes
   shell: sudo -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="{{ item }}" --database-user="owncloud" --database-pass="{{ password }}" --admin-user="owncloud" --admin-pass="{{ password }}"

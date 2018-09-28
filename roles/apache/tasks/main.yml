@@ -5,3 +5,20 @@
     - apache2
     - apache2-doc
     - apache2-utils
+
+
+- name: copying template file
+  copy:
+    src: templates/apache
+    dest: /etc/apache2/sites-available/owncloud.conf
+
+- name: create link
+  file:
+    src: /etc/apache2/sites-available/owncloud.conf
+    dest: /etc/apache2/sites-enabled/owncloud.conf
+    state: link
+
+- name: restart apache2
+  systemd:
+    name: apache2
+    state: restarted

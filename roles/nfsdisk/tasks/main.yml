@@ -11,3 +11,11 @@
     state: mounted
   with_inventory_hostnames:
     - nfs
+
+- name: get permission
+#   shell: chown -R www-data:www-data /var/www/owncloud/
+  file:
+    path: /var/www/owncloud/
+    recurse: yes
+    owner: www-data
+    group: www-data
