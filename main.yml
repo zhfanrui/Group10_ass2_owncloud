@@ -51,8 +51,21 @@
   roles:
     - apache
     - php
+    
+    
+- hosts: server1
+  become: true
+  become_user: root
+  
+  roles:
     - owncloud
 
+- hosts: server2
+  become: true
+  become_user: root
+  
+  roles:
+    - owncloud
 
 # =========================================================================================================================
 - name: loadbalancer
