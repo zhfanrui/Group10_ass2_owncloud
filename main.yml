@@ -16,13 +16,15 @@
       with_items:
         - {name: loadbalancer, group: loadbalancer}
         - {name: server1, group: server}
-#         - {name: server2, group: server}
+        - {name: server2, group: server}
         - {name: database, group: database}
         - {name: nfs, group: nfs}
         #- {name: backup, group: backup}
         #- {name: ldap, group: ldap}
       loop_control:
         loop_var: instances
+
+#======================================================================================
 
 - hosts: database
 
@@ -34,6 +36,7 @@
   roles:
     - mysql
 
+#======================================================================================
 - hosts: nfs
 
   # switch user
@@ -46,6 +49,7 @@
     - owncloud
     - nfs
 
+#======================================================================================
 
 - name: install web server software
   hosts: server
@@ -60,13 +64,13 @@
     - php
     - nfsdisk
     # - owncloud
-    
-    
+
+
 # - name: configure owncloud respectively - 1
 #   hosts: server1
 #   become: true
 #   become_user: root
-  
+
 #   roles:
 #     - apache
 #     - php
@@ -77,7 +81,7 @@
 #   hosts: server2
 #   become: true
 #   become_user: root
-  
+
 #   roles:
 #     - apache
 #     - php
@@ -150,7 +154,7 @@
 
 # =========================================================================================================================
 - name: configure owncloud for webserver
-  hosts: server
+  hosts: nfs
   become: true
   become_user: root
 
