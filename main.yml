@@ -66,27 +66,6 @@
     # - owncloud
 
 
-# - name: configure owncloud respectively - 1
-#   hosts: server1
-#   become: true
-#   become_user: root
-
-#   roles:
-#     - apache
-#     - php
-#     - owncloud
-
-
-# - name: configure owncloud respectively - 2
-#   hosts: server2
-#   become: true
-#   become_user: root
-
-#   roles:
-#     - apache
-#     - php
-#     - owncloud
-
 # =========================================================================================================================
 - name: loadbalancer
   hosts: loadbalancer
@@ -112,22 +91,6 @@
       with_inventory_hostnames:
         - server
 
-#     - name: replace new_ip_1
-#       replace:
-#         dest: /etc/nginx/sites-available/nginx
-#         regexp: '@new_ip_1'
-#         replace: "{{ item[0] }}"
-#       with_inventory_hostnames:
-#         - server
-
-#     - name: replace new_ip_2
-#       replace:
-#         dest: /etc/nginx/sites-available/nginx
-#         regexp: '@new_ip_2'
-#         replace: "{{ item[1] }}"
-#       with_inventory_hostnames:
-#         - server
-
     - name: replace ip_address
       replace:
         dest: /etc/nginx/sites-available/nginx
@@ -136,10 +99,6 @@
       with_inventory_hostnames:
         - loadbalancer
 
-#     - name: delete default
-#       file:
-#         path: /etc/nginx/sites-enabled/default
-#         state: absent
 
     - name: create link
       file:
@@ -168,15 +127,3 @@
       with_inventory_hostnames:
         - loadbalancer
 
-
-
-# - name: configure owncloud for webserver2
-#   hosts: server2
-#   become: true
-#   become_user: root
-
-#   tasks:
-#     - name: configure owncloud configuration
-#       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
-#       with_inventory_hostnames:
-#         - server2
