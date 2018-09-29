@@ -16,7 +16,7 @@
       with_items:
         - {name: loadbalancer, group: loadbalancer}
         - {name: server1, group: server}
-        - {name: server2, group: server}
+#         - {name: server2, group: server}
         - {name: database, group: database}
         - {name: nfs, group: nfs}
         #- {name: backup, group: backup}
@@ -64,7 +64,28 @@
     - php
     - nfsdisk
     # - owncloud
+    
+    
+# - name: configure owncloud respectively - 1
+#   hosts: server1
+#   become: true
+#   become_user: root
+  
+#   roles:
+#     - apache
+#     - php
+#     - owncloud
 
+
+# - name: configure owncloud respectively - 2
+#   hosts: server2
+#   become: true
+#   become_user: root
+  
+#   roles:
+#     - apache
+#     - php
+#     - owncloud
 
 # =========================================================================================================================
 - name: loadbalancer
