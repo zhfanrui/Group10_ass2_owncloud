@@ -2,7 +2,7 @@
 
 ## Machines and steps
 
-1. Create all the instances (including firewall rules and disks) and store all the ip address in a runtime inventory file (can be accessed by a moudule).
+1. Create all the instances (including firewall rules and disks) and store all the ip address in a runtime inventory file (can be accessed by a module).
 3. Setup database
     - mysql
 2. Setup nfs-server.
