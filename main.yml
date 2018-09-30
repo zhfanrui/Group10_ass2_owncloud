@@ -1,26 +1,182 @@
 ---
-- name: Create instance(s)
+- name: main playbook of all the task for all the kinds of servers
   hosts: localhost
-  
+
   vars_files:
     - vars.yml
 
   connection: local
   gather_facts: no
+
   tasks:
     # Packages required by the management server
-    - include_tasks: common.yml
+    - include_tasks: tasks/common.yml
     # Create a new GCP instance
-    - include_tasks: instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
+    - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
-        - {name: haproxy, group: haproxy}
+        - {name: loadbalancer, group: loadbalancer}
         - {name: server1, group: server}
         - {name: server2, group: server}
         - {name: database, group: database}
-        - {name: backup, group: backup}
-        - {name: ldap, group: ldap}
+        - {name: nfs, group: nfs}
+        #- {name: backup, group: backup}
+        #- {name: ldap, group: ldap}
       loop_control:
         loop_var: instances
-    # Setup the web platform on the new instance
-    - include_tasks: web.yml
-      hosts: server
+
+#======================================================================================
+
+- hosts: database
+
+  # switch user
+  become: true
+  become_user: root
+  gather_facts: no
+
+  roles:
+    - mysql
+
+#======================================================================================
+- hosts: nfs
+
+  # switch user
+  become: true
+  become_user: root
+
+  roles:
+    # - apache
+    - php
+    - owncloud
+    - nfs
+
+#======================================================================================
+
+- name: install web server software
+  hosts: server
+
+  # switch user
+  become: true
+  become_user: root
+  gather_facts: no
+
+  roles:
+    - apache
+    - php
+    - nfsdisk
+    # - owncloud
+
+
+# - name: configure owncloud respectively - 1
+#   hosts: server1
+#   become: true
+#   become_user: root
+
+#   roles:
+#     - apache
+#     - php
+#     - owncloud
+
+
+# - name: configure owncloud respectively - 2
+#   hosts: server2
+#   become: true
+#   become_user: root
+
+#   roles:
+#     - apache
+#     - php
+#     - owncloud
+
+# =========================================================================================================================
+- name: loadbalancer
+  hosts: loadbalancer
+  become: true
+  become_user: root
+
+  tasks:
+    - name: install nginx
+      apt:
+        name: nginx
+        state: latest
+
+    - name: download nginx configuration
+      get_url:
+        url: "https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/configuration/nginx"
+        dest: /etc/nginx/sites-available/nginx
+
+
+    - name: set config
+      shell: sed -i "3i server {{ item }};" nginx
+      args:
+        chdir: /etc/nginx/sites-available/
+      with_inventory_hostnames:
+        - server
+
+#     - name: replace new_ip_1
+#       replace:
+#         dest: /etc/nginx/sites-available/nginx
+#         regexp: '@new_ip_1'
+#         replace: "{{ item[0] }}"
+#       with_inventory_hostnames:
+#         - server
+
+#     - name: replace new_ip_2
+#       replace:
+#         dest: /etc/nginx/sites-available/nginx
+#         regexp: '@new_ip_2'
+#         replace: "{{ item[1] }}"
+#       with_inventory_hostnames:
+#         - server
+
+    - name: replace ip_address
+      replace:
+        dest: /etc/nginx/sites-available/nginx
+        regexp: '@ip_address'
+        replace: "{{ item }}"
+      with_inventory_hostnames:
+        - loadbalancer
+
+#     - name: delete default
+#       file:
+#         path: /etc/nginx/sites-enabled/default
+#         state: absent
+
+    - name: create link
+      file:
+        src: /etc/nginx/sites-available/nginx
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+# =========================================================================================================================
+- name: configure owncloud for webserver
+  hosts: nfs
+  become: true
+  become_user: root
+
+  tasks:
+
+    # - name: set config
+    #   shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," /var/www/owncloud/config/config.php
+
+    - name: configure owncloud configuration
+      shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
+      with_inventory_hostnames:
+        - loadbalancer
+
+
+
+# - name: configure owncloud for webserver2
+#   hosts: server2
+#   become: true
+#   become_user: root
+
+#   tasks:
+#     - name: configure owncloud configuration
+#       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
+#       with_inventory_hostnames:
+#         - server2

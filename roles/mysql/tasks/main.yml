@@ -1,26 +1,47 @@
-- name: configure mysql user
-  get_url: https://raw.githubusercontent.com/mulinShi/key/master/updateRootForMysql
+- name: configure mysql password
+  command: debconf-set-selections <<< 'mysql-server mysql-server/root_password password {{ password }}'
 
-- name: run mysql user
-  shell: sudo bash updateRootForMysql
+- name: configure mysql password again
+  command: debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password {{ password }}'
 
 - name: install mysql
-  become: true
   apt:
-    name: mysql-server
-    state: present
+    name: "{{ item }}"
     update_cache: yes
+  with_items:
+    - mysql-server
+    - mysql-client
 
 - name: install mysql python module
-  become: true
   apt:
     name: python-mysqldb
-    state: present
 
 - name: start mysql
-#       become: true
-  sudo: yes
   service:
     name: mysql
     state: started
+    enabled: true
+
+- name: create database for owncloud
+  mysql_db:
+    name: owncloud
+    login_host: localhost
+    login_password: "{{ password }}"
+    login_user: root
+
+- name: create 
+  mysql_user:
+    user: owncloud
+    password: "{{ password }}"
+    host: "%"
+    priv: 'owncloud.*:ALL'
+    state: present
+
+- name: replace
+  shell: sed -i -e '43 s/^/#/' /etc/mysql/mysql.conf.d/mysqld.cnf
+  
+- name: restart mysql
+  service:
+    name: mysql
+    state: restarted
     enabled: true

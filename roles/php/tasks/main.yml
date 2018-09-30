@@ -1,7 +1,6 @@
-- name: php install
-  become: true
-  apt: name=php7.0 state=present
-  apt: name=php7.0-mysql state=present
+# - name: php install
+#   apt: name=php7.0 state=present
+#   apt: name=php7.0-mysql state=present
 
 - name: install php model
   become: true
@@ -19,9 +18,7 @@
   - php-curl
 
 - name: install php extensions
-#       become: true
   apt:
     name: libapache2-mod-php
-    state: present
   notify:
     - restart apache2
