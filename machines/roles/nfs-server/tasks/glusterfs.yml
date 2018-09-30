@@ -1,0 +1,41 @@
+- name: debug hostvars
+  debug: var=hostvars
+
+- name: install gluster server
+  apt: name=glusterfs-server
+
+- name: enable & start gluster server
+  systemd:
+    name: glusterfs-server
+    state: started
+    enabled: yes
+  
+#- name: create a storage pool
+#  gluster_peer:
+#    state: present
+#    nodes:
+#      - nfs01
+#      - nfs02
+
+
+- name: create directories
+  file:
+    name: "{{ item }}"
+    state: directory
+  with_items:
+    - /share/bricks/www
+    - /share/bricks/data
+
+# gluster_volume probes as well; https://github.com/ansible/ansible/blob/devel/lib/ansible/modules/storage/glusterfs/gluster_volume.py
+- name: create gluster volume
+  gluster_volume:
+    state: present
+    name: owncloud
+    bricks: /share/bricks/www,/share/bricks/data
+    cluster: "{% for host in groups['nfs'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }},{% endfor %}"
+  run_once: true
+
+- name: start the new gluster volume
+  gluster_volume:
+    state: started
+    name: owncloud
