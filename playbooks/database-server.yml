@@ -12,7 +12,7 @@
 
   tasks:
     - name: Create webservers server(s)
-      include_tasks: tasks/instance.yml
+      include_tasks: tasks/gce_creaete_instance.yml
       vars:
         instance_name: "db01"
         instance_group: database
