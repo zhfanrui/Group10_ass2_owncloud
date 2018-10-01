@@ -15,7 +15,7 @@
     - include_tasks: tasks/instance_common.yml
     # Create a new GCP instance
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}" instance_tags="{{ instances.tags }}"
-      with_items: instances
+      with_items: "{{ instances }}"
       loop_control:
         loop_var: instances
 
