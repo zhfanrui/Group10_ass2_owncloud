@@ -17,7 +17,7 @@
 - name: mount
   mount:
     path: /var/www/owncloud
-    src: "{{ item }}:/var/www/owncloud"
+    src: "{{ item }}:/owncloud"
     fstype: glusterfs
     state: mounted
   with_inventory_hostnames:
