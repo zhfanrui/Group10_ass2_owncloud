@@ -1,0 +1,7 @@
+# This playbook installs packages which are
+# required on the management server.
+- name: install pip
+  become: true
+  become_user: root
+  apt:
+    name: python-pip

@@ -1,0 +1,40 @@
+---
+#------------------------------------------------
+# Deploys N webservers
+# Webservers should be salable so we can have
+# as many webservers as we need.
+#------------------------------------------------
+- name: create webserver(s) & set them up
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    # these are the servers that will be created
+    ws_instances:
+      - ws01
+      - ws02
+    # the group these servers belong to
+    instance_group: server
+
+  vars_files:
+    - vars/vars.yml
+
+  tasks:
+    - name: Create webservers server(s)
+      include_tasks: tasks/instance.yml
+      vars:
+        instance_name: "{{ item }}"
+        instance_tags: [http-server]
+      with_items:
+        - "{{ ws_instances }}"
+
+- hosts: server
+  become: true
+  become_user: root
+  gather_facts: no
+
+  roles:
+    - apache
+    - php
+    - nfs-client

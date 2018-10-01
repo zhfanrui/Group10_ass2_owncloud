@@ -1,0 +1,39 @@
+---
+- name: create NFS server(s) and set them up
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    nfs_instances:
+      - nfs01
+      - nfs02
+    instance_group: nfs
+    disk_size: 50
+
+  vars_files:
+    - vars/all.yml
+
+  tasks:
+    - name: Create NFS server(s)
+      include_tasks: tasks/gce_create_instance.yml
+      vars:
+        instance_name: "{{ item }}"
+      with_items:
+        - "{{ nfs_instances }}"
+
+    - name: Create NFS disk(s)
+      include_tasks: tasks/gce_create_volume.yml
+      vars:
+        instance_name: "{{ item }}"
+        disk_name: "{{ item }}-disk"
+      with_items:
+        - "{{ nfs_instances }}"
+
+- hosts: nfs
+  become: true
+  become_user: root
+  gather_facts: yes
+
+  roles:
+    - nfs-server
