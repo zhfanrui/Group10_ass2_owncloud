@@ -21,3 +21,15 @@ database:
   username: "root"
   dbname: "owncloud"
 
+
+disk_size: 50
+
+
+instances:
+  - {name: loadbalancer, group: loadbalancer, tags: [http-server] }
+  - {name: server1, group: server, tags: [http-server]}
+  - {name: server2, group: server, tags: [http-server]}
+  - {name: database, group: database, tags: [database]}
+  - {name: nfs, group: nfs, tags: [nfs]}
+  #- {name: backup, group: backup}
+  #- {name: ldap, group: ldap}

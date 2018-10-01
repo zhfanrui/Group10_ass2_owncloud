@@ -11,18 +11,16 @@
   tasks:
     # Packages required by the management server
     - include_tasks: tasks/common.yml
+    #
+    - include_tasks: tasks/instance_common.yml
     # Create a new GCP instance
-    - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
-      with_items:
-        - {name: loadbalancer, group: loadbalancer}
-        - {name: server1, group: server}
-        - {name: server2, group: server}
-        - {name: database, group: database}
-        - {name: nfs, group: nfs}
-        #- {name: backup, group: backup}
-        #- {name: ldap, group: ldap}
-      loop_control:
-        loop_var: instances
+    - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}" instance_tags="{{ instances.tags }}"
+      # with_items:
+      #   instances
+      # loop_control:
+      #   loop_var: instances
+
+    - include_tasks: tasks/gce_create_volume.yml
 
 #======================================================================================
 
@@ -47,7 +45,7 @@
     # - apache
     - php
     - owncloud
-    - nfs
+    - nfs-server
 
 #======================================================================================
 
@@ -62,7 +60,7 @@
   roles:
     - apache
     - php
-    - nfsdisk
+    - nfs-client
     # - owncloud
 
 
