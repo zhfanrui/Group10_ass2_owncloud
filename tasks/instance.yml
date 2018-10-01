@@ -5,38 +5,6 @@
 # this playbook also setups up SSH access.
 
 
-- name: download apache-libcloud
-  shell: pip install apache-libcloud
-
-- name: get public-key
-  shell: cat ~/.ssh/id_rsa.pub
-  register: publickey
-
-- name: who
-  shell: whoami
-  register: name
-
-- name: Create Firewall Rule w/Source Tags
-  gce_net:
-    name: default
-    project_id: "{{ project_id }}"
-    credentials_file: ""
-    service_account_email: ""
-    fwname: "database"
-    allowed: tcp:3306
-    state: "present"
-    target_tags: "database"
-- name: Create Firewall Rule w/Source Tags
-  gce_net:
-    name: default
-    project_id: "{{ project_id }}"
-    credentials_file: ""
-    service_account_email: ""
-    fwname: "nfs"
-    allowed: "tcp:111,2049;udp:111,2049"
-    state: "present"
-    target_tags: "nfs"
-
 # create a GCP instance using details in vars.yml
 - name: Launch instances
   gce:
@@ -48,10 +16,7 @@
     project_id: "{{ project_id }}"
     zone: "{{ instance.zone }}"
     metadata: "{ 'ssh-keys': '{{ name.stdout_lines.0 }}:{{ publickey.stdout_lines.0 }}' }"
-    tags:
-      - http-server
-      - database
-      - nfs
+    tags: "{{ instance_tags }}"
   register: gce
 
 - name: Wait for SSH to come up
