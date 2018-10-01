@@ -6,8 +6,6 @@
 
   tasks:
     - include_tasks: playbooks/tasks/common.yml
-    - include_tasks: playbooks/tasks/instance_common.yml
-
 
 - import_playbook: playbooks/nfs.yml
 - import_playbook: playbooks/webserver.yml
