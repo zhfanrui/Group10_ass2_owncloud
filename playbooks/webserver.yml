@@ -22,7 +22,7 @@
 
   tasks:
     - name: Create webservers server(s)
-      include_tasks: tasks/gce_creaete_instance.yml
+      include_tasks: tasks/gce_create_instance.yml
       vars:
         instance_name: "{{ item }}"
         instance_tags: [http-server]
