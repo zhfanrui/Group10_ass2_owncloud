@@ -1,13 +1,14 @@
+# This playbook installs packages which are
+# required on the management server.
+- name: install pip
+  become: true
+  become_user: root
+  apt:
+    name: python-pip
+
 - name: download apache-libcloud
   shell: pip install apache-libcloud
 
-- name: get public-key
-  shell: cat ~/.ssh/id_rsa.pub
-  register: publickey
-
-- name: who
-  shell: whoami
-  register: name
 
 - name: Create Firewall Rule w/Source Tags
   gce_net:

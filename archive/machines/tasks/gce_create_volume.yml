@@ -4,7 +4,8 @@
 - name: create new gce persistent disk
   gce_pd:
     name: "{{ disk_name }}"
-    instance_name: "nfs"
+    # what instance to connect the disk to?
+    instance_name: "{{ instance_name }}"
     size_gb: "{{ disk_size }}"
     disk_type: pd-ssd
     zone: "{{ instance.zone }}"

@@ -4,6 +4,14 @@
 
 # this playbook also setups up SSH access.
 
+# get the public key to use on the new instance
+- name: get public-key
+  shell: cat ~/.ssh/id_rsa.pub
+  register: publickey
+
+- name: who
+  shell: whoami
+  register: name
 
 # create a GCP instance using details in vars.yml
 - name: Launch instances

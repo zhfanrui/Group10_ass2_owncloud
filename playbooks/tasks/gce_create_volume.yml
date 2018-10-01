@@ -3,8 +3,10 @@
 
 - name: create new gce persistent disk
   gce_pd:
-    name: "nfs-ssd"
-    instance_name: "nfs"
+    # please keep disk_name and instance_name
+    # this makes it so we can have multiple NFS servers
+    name: "{{ disk_name }}"
+    instance_name: "{{ instance_name }}"
     size_gb: "{{ disk_size }}"
     disk_type: pd-ssd
     zone: "{{ instance.zone }}"

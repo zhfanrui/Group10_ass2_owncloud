@@ -1,0 +1,27 @@
+---
+#------------------------------------------------
+# Deploys a database server
+#------------------------------------------------
+- name: create database server(s) & set them up
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars_files:
+    - vars/vars.yml
+
+  tasks:
+    - name: Create webservers server(s)
+      include_tasks: tasks/gce_create_instance.yml
+      vars:
+        instance_name: "db01"
+        instance_group: database
+        instance_tags: [database]
+
+- hosts: database
+  become: true
+  become_user: root
+  gather_facts: no
+
+  roles:
+    - mysql
