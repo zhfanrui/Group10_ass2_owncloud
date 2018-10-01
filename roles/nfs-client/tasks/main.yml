@@ -9,6 +9,9 @@
 
 # - name: mount the network drive
 #   shell: mount -t glusterfs nfs01:/owncloud /share/
+- name: install gluster client
+  apt:
+    name: attr
 
 # sudo mount -t nfs 35.237.213.137:/vars/www/owncloud /vars/www/owncloud
 - name: mount
