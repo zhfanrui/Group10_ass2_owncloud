@@ -33,6 +33,7 @@
     name: owncloud
     bricks: /vars/www/owncloud,/share/bricks/data
     cluster: "{% for host in groups['nfs'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }},{% endfor %}"
+    force: yes
   run_once: true
 
 - name: start the new gluster volume
