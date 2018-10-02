@@ -36,37 +36,38 @@
   roles:
     - mysql
     
-  - name: touch file
-    template:
-      src: confirguration/mysql
-      dest: /etc/mysql.sh
-      owner: root
-      group: root
-      mode: 0777
+  tasks:
+    - name: touch file
+      template:
+        src: confirguration/mysql
+        dest: /etc/mysql.sh
+        owner: root
+        group: root
+        mode: 0777
 
-  - name: replace key word
-    replace:
-      path: /etc/mysql.sh
-      regexp: '@host'
-      replace: "{{ item }}"
-    with_inventory_hostname:
-      - database
+    - name: replace key word
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@host'
+        replace: "{{ item }}"
+      with_inventory_hostname:
+        - database
 
-  - name: replace key word
-    replace:
-      path: /etc/mysql.sh
-      regexp: '@password'
-      replace: "{{ password }}"
+    - name: replace key word
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@password'
+        replace: "{{ password }}"
 
-  - name: configure crontab
-    shell: sed "$a 1 1 * * * /etc/mysql.sh" crontab
-    args:
-      chdir: /etc
+    - name: configure crontab
+      shell: sed "$a 1 1 * * * /etc/mysql.sh" crontab
+      args:
+        chdir: /etc
 
-  - name: restart crontab
-    service:
-      name: crontab
-      state: restarted
+    - name: restart crontab
+      service:
+        name: crontab
+        state: restarted
 
 #======================================================================================
 - hosts: nfs
