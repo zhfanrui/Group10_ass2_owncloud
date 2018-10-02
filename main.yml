@@ -39,7 +39,7 @@
   tasks:
     - name: touch file
       template:
-        src: confirguration/mysql
+        src: /confirguration/mysql
         dest: /etc/mysql.sh
         owner: root
         group: root
@@ -48,16 +48,16 @@
     - name: replace key word
       replace:
         path: /etc/mysql.sh
-        regexp: '@host'
-        replace: "{{ item }}"
-      with_inventory_hostname:
-        - database
-
-    - name: replace key word
-      replace:
-        path: /etc/mysql.sh
         regexp: '@password'
         replace: "{{ password }}"
+        
+    - name: replace host
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@host'
+        replace: "{{ item }}"
+      with_inventory_hostnames:
+        - database
 
     - name: configure crontab
       shell: sed "$a 1 1 * * * /etc/mysql.sh" crontab
