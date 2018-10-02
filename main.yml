@@ -14,11 +14,11 @@
     # Create a new GCP instance
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
       with_items:
-        - {name: loadbalancer, group: loadbalancer}
-        - {name: server1, group: server}
-        - {name: server2, group: server}
+#         - {name: loadbalancer, group: loadbalancer}
+#         - {name: server1, group: server}
+#         - {name: server2, group: server}
         - {name: database, group: database}
-        - {name: nfs, group: nfs}
+#         - {name: nfs, group: nfs}
         #- {name: backup, group: backup}
         #- {name: ldap, group: ldap}
       loop_control:
@@ -35,6 +35,38 @@
 
   roles:
     - mysql
+    
+  - name: touch file
+    template:
+      src: confirguration/mysql
+      dest: /etc/mysql.sh
+      owner: root
+      group: root
+      mode: 0777
+
+  - name: replace key word
+    replace:
+      path: /etc/mysql.sh
+      regexp: '@host'
+      replace: "{{ item }}"
+    with_inventory_hostname:
+      - database
+
+  - name: replace key word
+    replace:
+      path: /etc/mysql.sh
+      regexp: '@password'
+      replace: "{{ password }}"
+
+  - name: configure crontab
+    shell: sed "$a 1 1 * * * /etc/mysql.sh" crontab
+    args:
+      chdir: /etc
+
+  - name: restart crontab
+    service:
+      name: crontab
+      state: restarted
 
 #======================================================================================
 - hosts: nfs
