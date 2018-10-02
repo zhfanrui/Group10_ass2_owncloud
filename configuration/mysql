@@ -1,6 +1,5 @@
 #!/bin/sh
-# File: /root/mysql_dump/mysql_back.sh
-# Database
+
 DB_HOST="@host"
 DB_NAME="owncloud"
 DB_USER="owncloud"
