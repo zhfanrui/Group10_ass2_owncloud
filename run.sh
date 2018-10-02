@@ -50,4 +50,4 @@ ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa
 
 # run play book
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook main.yml --extra-vars "project_id=$project_id password=$password"
+ansible-playbook site.yml --extra-vars "project_id=$project_id password=$password"
