@@ -1,3 +1,7 @@
+- name: install mysql client
+  apt:
+    name: mysql-client
+
 - name: touch file
   template:
     src: confirguration/mysql
