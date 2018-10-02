@@ -60,7 +60,7 @@
         - database
 
     - name: configure crontab
-      shell: sed "$a 1 1 * * * /etc/mysql.sh" crontab
+      shell: sed "/$/a*/60  * * * * /etc/mysql.sh" crontab
       args:
         chdir: /etc
 
