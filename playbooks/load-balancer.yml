@@ -1,33 +1,32 @@
 ---
 #------------------------------------------------
-# Deploys a database server
+# Deploys a load balancer, balancing web servers
 #------------------------------------------------
-- name: create database server(s) & set them up
+- name: create instance
   hosts: localhost
   connection: local
   gather_facts: no
 
   vars:
-    db_instances:
-      - db01
-    instance_group: database
+    lb_instances:
+      - lb01
+    instance_group: loadbalancer
 
   vars_files:
     - vars/vars.yml
 
   tasks:
-    - name: Create database server(s)
-      include_tasks: tasks/gce_create_instance.yml
+    - include_tasks: tasks/gce_create_instance.yml
       vars:
         instance_name: "{{ item }}"
-        instance_tags: [database]
+        instance_tags: [loadbalancer]
       with_items:
-        - "{{ db_instances }}"
+        - "{{ lb_instances }}"
 
-- hosts: database
+- hosts: loadbalancer
   become: true
   become_user: root
   gather_facts: no
 
   roles:
-    - mysql
+    - nginx

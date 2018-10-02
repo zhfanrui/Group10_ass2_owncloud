@@ -10,3 +10,19 @@
 - import_playbook: playbooks/nfs.yml
 - import_playbook: playbooks/webserver.yml
 - import_playbook: playbooks/database-server.yml
+- import_playbook: playbooks/load-balancer.yml
+
+- name: configure owncloud for webserver
+  hosts: nfs
+  become: true
+  become_user: root
+
+  tasks:
+
+    # - name: set config
+    #   shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," /var/www/owncloud/config/config.php
+
+    - name: configure owncloud configuration
+      shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
+      with_inventory_hostnames:
+        - loadbalancer

@@ -1,0 +1,57 @@
+- name: install nginx
+  apt:
+    name: nginx
+    state: latest
+
+- name: download nginx configuration
+  get_url:
+    url: "https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/configuration/nginx"
+    dest: /etc/nginx/sites-available/nginx
+
+
+- name: set config
+  shell: sed -i "3i server {{ item }};" nginx
+  args:
+    chdir: /etc/nginx/sites-available/
+  with_inventory_hostnames:
+    - server
+
+#     - name: replace new_ip_1
+#       replace:
+#         dest: /etc/nginx/sites-available/nginx
+#         regexp: '@new_ip_1'
+#         replace: "{{ item[0] }}"
+#       with_inventory_hostnames:
+#         - server
+
+#     - name: replace new_ip_2
+#       replace:
+#         dest: /etc/nginx/sites-available/nginx
+#         regexp: '@new_ip_2'
+#         replace: "{{ item[1] }}"
+#       with_inventory_hostnames:
+#         - server
+
+- name: replace ip_address
+  replace:
+    dest: /etc/nginx/sites-available/nginx
+    regexp: '@ip_address'
+    replace: "{{ item }}"
+  with_inventory_hostnames:
+    - loadbalancer
+
+#     - name: delete default
+#       file:
+#         path: /etc/nginx/sites-enabled/default
+#         state: absent
+
+- name: create link
+  file:
+    src: /etc/nginx/sites-available/nginx
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
