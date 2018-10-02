@@ -2,16 +2,13 @@
 # File: /root/mysql_dump/mysql_back.sh
 # Database
 DB_HOST="@host"
-infoDB_NAME="owncloud"
+DB_NAME="owncloud"
 DB_USER="owncloud"
 DB_PASS="@password"
-# Others vars
-# whereis mysqldump
-# IS ` but not '
+
 BIN_DIR="/usr/bin"
 BCK_DIR="/root/mysql_dump/data"
 DATE=`date +%Y%m%d_%H%M%S`
-# TODO
+
 mkdir -p $BCK_DIR
-$BIN_DIR/mysqldump --opt -u$DB_USER -p$DB_PASS -h$DB_HOST $DB_NAME | gzip \
- > $BCK_DIR/$DB_NAME.dump_$DATE.sql
+$BIN_DIR/mysqldump -u$DB_USER -p$DB_PASS -h$DB_HOST --databases $DB_NAME > $BCK_DIR/$DB_NAME.dump_$DATE.sql
