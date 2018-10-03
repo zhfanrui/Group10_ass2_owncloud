@@ -1,4 +1,6 @@
-- hosts: database
+---
+- name: backup database
+  hosts: database
   become: true
   become_user: root
   gather_facts: no
