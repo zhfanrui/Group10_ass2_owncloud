@@ -53,7 +53,7 @@
       with_inventory_hostnames:
         - database
 
-    - name: replace key word
+    - name: replace password
       replace:
         path: /etc/mysql.sh
         regexp: '@password'
