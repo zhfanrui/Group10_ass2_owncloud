@@ -45,6 +45,7 @@
         group: root
         mode: 0777
 
+
     - name: replace host
       replace:
         path: /etc/mysql.sh
@@ -52,6 +53,7 @@
         replace: "{{ item }}"
       with_inventory_hostnames:
         - database
+
 
     - name: replace password
       replace:
