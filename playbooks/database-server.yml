@@ -1,0 +1,16 @@
+---
+#------------------------------------------------
+# Deploys a database server
+#------------------------------------------------
+- name: create database server(s) & set them up
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+- hosts: database
+  become: true
+  become_user: root
+  gather_facts: yes
+
+  roles:
+    - mysql

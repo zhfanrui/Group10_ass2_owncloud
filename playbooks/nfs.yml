@@ -1,0 +1,22 @@
+---
+#------------------------------------------------
+# Deploys N NFS servers
+# NFS servers should be salable, as we will
+# need more stroage space as there is more user
+# demand since this is 'cloud storage'
+#------------------------------------------------
+- name: create NFS server(s) and set them up
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars_files:
+    - vars/vars.yml
+
+- hosts: nfs
+  become: true
+  become_user: root
+  gather_facts: yes
+
+  roles:
+    - nfs-server

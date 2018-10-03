@@ -1,0 +1,19 @@
+---
+#------------------------------------------------
+# Deploys a load balancer, balancing web servers
+#------------------------------------------------
+- name: create instance
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars_files:
+    - vars/vars.yml
+
+- hosts: loadbalancer
+  become: true
+  become_user: root
+  gather_facts: yes
+
+  roles:
+    - nginx

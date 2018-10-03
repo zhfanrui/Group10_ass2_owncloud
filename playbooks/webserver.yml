@@ -1,0 +1,20 @@
+---
+#------------------------------------------------
+# Deploys N webservers
+# Webservers should be salable so we can have
+# as many webservers as we need.
+#------------------------------------------------
+- name: create webserver(s) & set them up
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+- hosts: server
+  become: true
+  become_user: root
+  gather_facts: yes
+
+  roles:
+    - apache
+    - php
+    - nfs-client
