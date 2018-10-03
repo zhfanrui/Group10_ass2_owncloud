@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 - name: backup database
   hosts: database
@@ -47,3 +48,40 @@
       service:
         name: cron
         state: restarted
+=======
+- name: install mysql client
+  apt:
+    name: mysql-client
+
+- name: touch file
+  template:
+    src: confirguration/mysql
+    dest: /etc/mysql.sh
+    owner: root
+    group: root
+    mode: 0777
+
+- name: replace key word
+  replace:
+    path: /etc/mysql.sh
+    regexp: '@host'
+    replace: "{{ item }}"
+  with_inventory_hostname:
+    - database
+
+- name: replace key word
+  replace:
+    path: /etc/mysql.sh
+    regexp: '@password'
+    replace: "{{ password }}"
+
+- name: configure crontab
+  shell: sed "$a 1 1 * * * /etc/mysql.sh" crontab
+  args:
+    chdir: /etc
+
+- name: restart crontab
+  service:
+    name: crontab
+    state: restarted
+>>>>>>> 7c030f8d30cc9fd3f0e5e9da9c6efa7451fc5a72
