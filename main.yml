@@ -39,18 +39,13 @@
   tasks:
     - name: touch file
       template:
-        src: /confirguration/mysql
+        src: mysql
         dest: /etc/mysql.sh
         owner: root
         group: root
         mode: 0777
 
-    - name: replace password
-      replace:
-        path: /etc/mysql.sh
-        regexp: '@password'
-        replace: "{{ password }}"
-        
+
     - name: replace host
       replace:
         path: /etc/mysql.sh
@@ -59,14 +54,27 @@
       with_inventory_hostnames:
         - database
 
+
+    - name: replace password
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@password'
+        replace: "{{ password }}"
+
     - name: configure crontab
-      shell: sed "/$/a*/60  * * * * /etc/mysql.sh" crontab
+      shell: echo "2 * * * * /etc/mysql.sh" >> crontab
+      args:
+        chdir: /etc
+
+    - name: run shell
+      shell: sudo bash mysql.sh
       args:
         chdir: /etc
 
     - name: restart crontab
+      become: yes
       service:
-        name: crontab
+        name: cron
         state: restarted
 
 #======================================================================================
