@@ -7,26 +7,13 @@
   connection: local
   gather_facts: no
 
-  vars:
-    lb_instances:
-      - lb01
-    instance_group: loadbalancer
-
   vars_files:
     - vars/vars.yml
-
-  tasks:
-    - include_tasks: tasks/gce_create_instance.yml
-      vars:
-        instance_name: "{{ item }}"
-        instance_tags: [loadbalancer]
-      with_items:
-        - "{{ lb_instances }}"
 
 - hosts: loadbalancer
   become: true
   become_user: root
-  gather_facts: no
+  gather_facts: yes
 
   roles:
     - nginx

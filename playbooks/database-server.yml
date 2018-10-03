@@ -7,27 +7,10 @@
   connection: local
   gather_facts: no
 
-  vars:
-    db_instances:
-      - db01
-    instance_group: database
-
-  vars_files:
-    - vars/vars.yml
-
-  tasks:
-    - name: Create database server(s)
-      include_tasks: tasks/gce_create_instance.yml
-      vars:
-        instance_name: "{{ item }}"
-        instance_tags: [database]
-      with_items:
-        - "{{ db_instances }}"
-
 - hosts: database
   become: true
   become_user: root
-  gather_facts: no
+  gather_facts: yes
 
   roles:
     - mysql

@@ -4,9 +4,58 @@
   connection: local
   gather_facts: no
 
+  #--------------------------------------------
+  # Build the inventory (order doesn't matter)
+  #--------------------------------------------
+  vars_files:
+    - playbooks/vars/vars.yml
+  vars:
+    # what instances to create?
+    instances:
+      - group: database
+        names: db01
+      - group: webserver
+        names: ws01,ws02
+      - group: nfs
+        names: nfs01
+      - group: loadbalancer
+        names: lb01
+
+    # what instance to attach disk to?
+    disks:
+      instances:
+        - nfs01
+      disk_size: 50
+
   tasks:
+    - debug: var=instance_info
+    # install required packages for the controller
     - include_tasks: playbooks/tasks/common.yml
 
+    # create the instances
+    - include_tasks: playbooks/tasks/gce_create_instance.yml
+      vars:
+        instance_name: "{{ node.names }}"
+        instance_tags: ["{{ node.group }}"]
+        instance_group: "{{ node.group }}"
+      with_items:
+        - "{{ instances }}"
+      loop_control:
+        loop_var: node
+
+    - name: Create NFS disk(s)
+      include_tasks: playbooks/tasks/gce_create_volume.yml
+      vars:
+        instance_name: "{{ item }}"
+        disk_name: "{{ item }}-disk"
+        disk_size: "{{ disks.disk_size }}"
+      with_items:
+        - "{{ disks.instances }}"
+
+
+# The reason these playbooks are separated is so
+# if someone needs to create another 'server' such as 
+# a NFS server they can run nfs.yml to set it up.
 - import_playbook: playbooks/nfs.yml
 - import_playbook: playbooks/webserver.yml
 - import_playbook: playbooks/database-server.yml

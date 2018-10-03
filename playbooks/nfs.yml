@@ -10,32 +10,8 @@
   connection: local
   gather_facts: no
 
-  vars:
-    # can create more than one
-    nfs_instances:
-      - nfs01
-
   vars_files:
     - vars/vars.yml
-
-  tasks:
-    - name: Create NFS server(s)
-      include_tasks: tasks/gce_create_instance.yml
-      vars:
-        instance_name: "{{ item }}"
-        instance_group: nfs
-        instance_tags: [nfs]
-      with_items:
-        - "{{ nfs_instances }}"
-
-    - name: Create NFS disk(s)
-      include_tasks: tasks/gce_create_volume.yml
-      vars:
-        instance_name: "{{ item }}"
-        disk_name: "{{ item }}-disk"
-        disk_size: 50
-      with_items:
-        - "{{ nfs_instances }}"
 
 - hosts: nfs
   become: true
