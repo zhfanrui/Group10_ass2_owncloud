@@ -1,3 +1,54 @@
+<<<<<<< HEAD
+---
+- name: backup database
+  hosts: database
+  become: true
+  become_user: root
+  connection: database
+  gather_facts: no
+  
+  vars_files:
+    - vars.yml
+    
+  tasks:
+    - name: touch file
+      template:
+        src: mysql
+        dest: /etc/mysql.sh
+        owner: root
+        group: root
+        mode: 0777
+
+    - name: replace host
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@host'
+        replace: "{{ item }}"
+      with_inventory_hostnames:
+        - database
+        
+    - name: replace password
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@password'
+        replace: "{{ password }}"
+
+    - name: configure crontab
+      shell: echo "*/1 *   * * *   root    bash /etc/mysql.sh" >> crontab
+      args:
+        chdir: /etc
+
+    - name: run shell
+      shell: sudo bash mysql.sh
+      args:
+        chdir: /etc
+
+    - name: restart crontab
+      become: yes
+      service:
+        name: cron
+        state: restarted
+=======
 - name: install mysql client
   apt:
     name: mysql-client
@@ -33,3 +84,4 @@
   service:
     name: crontab
     state: restarted
+>>>>>>> 7c030f8d30cc9fd3f0e5e9da9c6efa7451fc5a72

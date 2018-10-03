@@ -14,8 +14,20 @@
     #
     - include_tasks: tasks/instance_common.yml
     # Create a new GCP instance
+<<<<<<< HEAD
+    - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
+      with_items:
+#         - {name: loadbalancer, group: loadbalancer}
+#         - {name: server1, group: server}
+#         - {name: server2, group: server}
+        - {name: database, group: database}
+#         - {name: nfs, group: nfs}
+        #- {name: backup, group: backup}
+        #- {name: ldap, group: ldap}
+=======
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}" instance_tags="{{ instances.tags }}"
       with_items: "{{ instances }}"
+>>>>>>> 7c030f8d30cc9fd3f0e5e9da9c6efa7451fc5a72
       loop_control:
         loop_var: instances
 
@@ -32,6 +44,47 @@
 
   roles:
     - mysql
+    
+  tasks:
+    - name: touch file
+      template:
+        src: mysql
+        dest: /etc/mysql.sh
+        owner: root
+        group: root
+        mode: 0777
+
+
+    - name: replace host
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@host'
+        replace: "{{ item }}"
+      with_inventory_hostnames:
+        - database
+
+
+    - name: replace password
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@password'
+        replace: "{{ password }}"
+
+    - name: configure crontab
+      shell: echo "*/1 *   * * *   root    bash /etc/mysql.sh" >> crontab
+      args:
+        chdir: /etc
+
+    - name: run shell
+      shell: sudo bash mysql.sh
+      args:
+        chdir: /etc
+
+    - name: restart crontab
+      become: yes
+      service:
+        name: cron
+        state: restarted
 
 #======================================================================================
 - hosts: nfs
@@ -63,27 +116,6 @@
     # - owncloud
 
 
-# - name: configure owncloud respectively - 1
-#   hosts: server1
-#   become: true
-#   become_user: root
-
-#   roles:
-#     - apache
-#     - php
-#     - owncloud
-
-
-# - name: configure owncloud respectively - 2
-#   hosts: server2
-#   become: true
-#   become_user: root
-
-#   roles:
-#     - apache
-#     - php
-#     - owncloud
-
 # =========================================================================================================================
 - name: loadbalancer
   hosts: loadbalancer
@@ -109,22 +141,6 @@
       with_inventory_hostnames:
         - server
 
-#     - name: replace new_ip_1
-#       replace:
-#         dest: /etc/nginx/sites-available/nginx
-#         regexp: '@new_ip_1'
-#         replace: "{{ item[0] }}"
-#       with_inventory_hostnames:
-#         - server
-
-#     - name: replace new_ip_2
-#       replace:
-#         dest: /etc/nginx/sites-available/nginx
-#         regexp: '@new_ip_2'
-#         replace: "{{ item[1] }}"
-#       with_inventory_hostnames:
-#         - server
-
     - name: replace ip_address
       replace:
         dest: /etc/nginx/sites-available/nginx
@@ -133,10 +149,6 @@
       with_inventory_hostnames:
         - loadbalancer
 
-#     - name: delete default
-#       file:
-#         path: /etc/nginx/sites-enabled/default
-#         state: absent
 
     - name: create link
       file:
@@ -165,15 +177,3 @@
       with_inventory_hostnames:
         - loadbalancer
 
-
-
-# - name: configure owncloud for webserver2
-#   hosts: server2
-#   become: true
-#   become_user: root
-
-#   tasks:
-#     - name: configure owncloud configuration
-#       shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
-#       with_inventory_hostnames:
-#         - server2
