@@ -1,31 +1,46 @@
-- name: touch file
-  template:
-    src: confirguration/mysql
-    dest: /etc/mysql.sh
-    owner: root
-    group: root
-    mode: 0777
+- hosts: database
+  become: true
+  become_user: root
+  gather_facts: no
+  
+  vars_files:
+    - vars.yml
+    
+  tasks:
+    - name: touch file
+      template:
+        src: mysql
+        dest: /etc/mysql.sh
+        owner: root
+        group: root
+        mode: 0777
 
-- name: replace key word
-  replace:
-    path: /etc/mysql.sh
-    regexp: '@host'
-    replace: "{{ item }}"
-  with_inventory_hostname:
-    - database
+    - name: replace host
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@host'
+        replace: "{{ item }}"
+      with_inventory_hostnames:
+        - database
+        
+    - name: replace password
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@password'
+        replace: "{{ password }}"
 
-- name: replace key word
-  replace:
-    path: /etc/mysql.sh
-    regexp: '@password'
-    replace: "{{ password }}"
+    - name: configure crontab
+      shell: echo "*/1 *   * * *   root    bash /etc/mysql.sh" >> crontab
+      args:
+        chdir: /etc
 
-- name: configure crontab
-  shell: sed "$a 1 1 * * * /etc/mysql.sh" crontab
-  args:
-    chdir: /etc
+    - name: run shell
+      shell: sudo bash mysql.sh
+      args:
+        chdir: /etc
 
-- name: restart crontab
-  service:
-    name: crontab
-    state: restarted
+    - name: restart crontab
+      become: yes
+      service:
+        name: cron
+        state: restarted
