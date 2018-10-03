@@ -62,7 +62,7 @@
         replace: "{{ password }}"
 
     - name: configure crontab
-      shell: echo "2 * * * * /etc/mysql.sh" >> crontab
+      shell: echo "*/1 *   * * *   root    bash /etc/mysql.sh" >> crontab
       args:
         chdir: /etc
 
