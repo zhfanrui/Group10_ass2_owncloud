@@ -4,8 +4,8 @@
   connection: local
   gather_facts: no
 
-  vars_files:
-    - vars/vars.yml
+  # vars_files:
+  #   - vars/vars.yml
   vars:
     # what instances to create?
     instances:
