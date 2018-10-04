@@ -8,26 +8,3 @@
 
 - name: download apache-libcloud
   shell: pip install apache-libcloud
-
-
-- name: Create Firewall Rule w/Source Tags
-  gce_net:
-    name: default
-    project_id: "{{ project_id }}"
-    credentials_file: ""
-    service_account_email: ""
-    fwname: "database"
-    allowed: tcp:3306
-    state: "present"
-    target_tags: "database"
-
-- name: Create Firewall Rule w/Source Tags
-  gce_net:
-    name: default
-    project_id: "{{ project_id }}"
-    credentials_file: ""
-    service_account_email: ""
-    fwname: "nfs"
-    allowed: "tcp:111,2049,24007-24011,38465-38485;udp:111,2049"
-    state: "present"
-    target_tags: "nfs"

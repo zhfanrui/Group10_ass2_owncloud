@@ -1,0 +1,40 @@
+# We do not want to open database port
+# so people outside the network can access it
+# ~ Dylan
+#- name: Create Firewall Rule w/Source Tags
+#  gce_net:
+#    name: default
+#    project_id: "{{ project_id }}"
+#    credentials_file: ""
+#    service_account_email: ""
+#    fwname: "database"
+#    allowed: tcp:3306
+#    state: "present"
+#    target_tags: "database"
+
+# No longer required since GCE already has 'default-allow-internal', which
+# means all internal ports on all servers are accessiable.
+# NFS now uses internal IPs
+# ~ Dylan
+#- name: create firewall exception for network file system
+#  gce_net:
+#    name: default
+#    project_id: "{{ project_id }}"
+#    credentials_file: ""
+#    service_account_email: ""
+#    fwname: "nfs"
+#    allowed: "tcp:111,2049,24007-24011,38465-38485;udp:111,2049"
+#    state: "present"
+#    target_tags: "nfs"
+
+# We don't really need this either if we were to put http-server as the servers' tags.
+- name: create firewall exception for loadbalancer
+  gce_net:
+    name: default
+    project_id: "{{ project_id }}"
+    credentials_file: ""
+    service_account_email: ""
+    fwname: "loadbalancer"
+    allowed: "tcp:80"
+    state: "present"
+    target_tags: "loadbalancer"

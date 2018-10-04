@@ -5,17 +5,9 @@
 - name: install php model
   become: true
   apt:
-    name: "{{ item }}"
+    # with_items was deprecated
+    name: ['php', 'php-mysql', 'php-gd', 'php-zip', 'php-mbstring', 'php-xml', 'php-intl', 'php-curl']
     state: present
-  with_items:
-  - php
-  - php-mysql
-  - php-gd
-  - php-zip
-  - php-mbstring
-  - php-xml
-  - php-intl
-  - php-curl
 
 - name: install php extensions
   apt:

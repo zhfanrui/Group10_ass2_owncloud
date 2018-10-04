@@ -28,12 +28,14 @@
       disk_size: 50
 
   tasks:
-    - debug: var=instance_info
-    # install required packages for the controller
-    - include_tasks: playbooks/tasks/common.yml
+    - name: setup the ansible controller
+      include_tasks: playbooks/tasks/common.yml
 
-    # create the instances
-    - include_tasks: playbooks/tasks/gce_create_instance.yml
+    - name: configure the firewall
+      include_tasks: playbooks/tasks/configure_firewall.yml
+
+    - name: create instances(s)
+      include_tasks: playbooks/tasks/gce_create_instance.yml
       vars:
         instance_name: "{{ node.names }}"
         instance_tags: ["{{ node.group }}"]
@@ -43,7 +45,7 @@
       loop_control:
         loop_var: node
 
-    - name: Create NFS disk(s)
+    - name: create disk(s)
       include_tasks: playbooks/tasks/gce_create_volume.yml
       vars:
         instance_name: "{{ item }}"
@@ -57,21 +59,6 @@
 # if someone needs to create another 'server' such as 
 # a NFS server they can run nfs.yml to set it up.
 - import_playbook: playbooks/nfs.yml
-- import_playbook: playbooks/webserver.yml
 - import_playbook: playbooks/database-server.yml
+- import_playbook: playbooks/webserver.yml
 - import_playbook: playbooks/load-balancer.yml
-
-- name: configure owncloud for webserver
-  hosts: nfs
-  become: true
-  become_user: root
-
-  tasks:
-
-    # - name: set config
-    #   shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," /var/www/owncloud/config/config.php
-
-    - name: configure owncloud configuration
-      shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
-      with_inventory_hostnames:
-        - loadbalancer
