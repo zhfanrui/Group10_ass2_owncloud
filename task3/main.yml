@@ -17,7 +17,7 @@
     - include_tasks: tasks/common.yml
 
     # create the instances
-    - include_tasks: playbooks/tasks/gce_create_instance.yml
+    - include_tasks: tasks/gce_create_instance.yml
       vars:
         instance_name: "{{ node.names }}"
         instance_tags: ["{{ node.group }}"]
