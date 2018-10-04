@@ -14,7 +14,7 @@
   args:
     chdir: /etc/nginx/sites-available/
   with_inventory_hostnames:
-    - server
+    - webserver
 
 #     - name: replace new_ip_1
 #       replace:

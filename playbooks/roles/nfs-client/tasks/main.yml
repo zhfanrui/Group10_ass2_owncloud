@@ -2,34 +2,34 @@
   apt:
     name: glusterfs-client
 
-- name: create directory to mount network drive
-  file:
-    name: /share/
-    state: directory
-
-# - name: mount the network drive
-#   shell: mount -t glusterfs nfs01:/owncloud /share/
 - name: install gluster client
   apt:
     name: attr
 
-# sudo mount -t nfs 35.237.213.137:/vars/www/owncloud /vars/www/owncloud
-- name: mount
-  mount:
-    path: /var/www/owncloud
-    src: "{{ item }}:/owncloud"
-    fstype: glusterfs
-    state: mounted
-  with_inventory_hostnames:
-    - nfs
-
-- name: get permission
-#   shell: chown -R www-data:www-data /var/www/owncloud/
+- name: create directory to mount NFS
   file:
-    path: /var/www/owncloud/
+    path: /nfs/owncloud/
+    state: directory
     recurse: yes
     owner: www-data
     group: www-data
+
+# sudo mount -t nfs 35.237.213.137:/vars/www/owncloud /vars/www/owncloud
+- name: mount the NFS
+  mount:
+    path: /nfs/owncloud/
+    src: "{{ groups['nfs'][0] }}:/owncloud" # only for one server, not multiple
+    fstype: glusterfs
+    state: mounted
+
+- name: symlink the mounted directory
+  file:
+    src: /nfs/owncloud
+    dest: /var/www/owncloud
+    owner: www-data
+    group: www-data
+    state: link
+
 
 
 # todo: data

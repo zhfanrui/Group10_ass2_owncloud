@@ -19,12 +19,12 @@
 
 - name: create network directory
   file:
-    name: /share/
+    name: /nfs/
     state: directory
 
 - name: mount the ssd
   mount:
-    name: /share/
+    name: /nfs/
     src: /dev/sdb
     fstype: xfs
     state: mounted
@@ -48,11 +48,8 @@
 
 - name: create directories
   file:
-    name: "{{ item }}"
+    name: /var/www/
     state: directory
-  with_items:
-    - /vars/www/owncloud
-    - /share/bricks/data
 
 # gluster_volume probes as well;
 # https://github.com/ansible/ansible/blob/devel/lib/ansible/modules/storage/glusterfs/gluster_volume.py
@@ -60,7 +57,7 @@
   gluster_volume:
     state: present
     name: owncloud
-    bricks: /vars/www/owncloud,/share/bricks/data
+    bricks: /var/www/owncloud
     cluster: "{% for host in groups['nfs'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }},{% endfor %}"
     force: yes
   run_once: true

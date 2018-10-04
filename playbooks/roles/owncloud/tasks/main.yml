@@ -1,14 +1,12 @@
-- name: Add an apt key by id from a keyserver
-  apt_key:
-    url: https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key
-
-- name: configure owncloud
-  shell: echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /' | sudo tee /etc/apt/sources.list.d/owncloud.list
-
-- name: install owncloud-files
-  apt:
-    name: owncloud-files
-    update_cache: yes
+- name: Download owncloud
+  block:
+    - apt_key:
+        url: https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key
+    - shell: echo 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /' | sudo tee /etc/apt/sources.list.d/owncloud.list
+    - apt:
+        name: owncloud-files
+        update_cache: yes
+  run_once: true # only run on one host
 
 - name: occ - maintenance:install
   ignore_errors: yes
