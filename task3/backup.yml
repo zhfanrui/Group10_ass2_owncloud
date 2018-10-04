@@ -43,11 +43,6 @@
       args:
         chdir: /etc
 
-    - name: configure crontab for data (nfs)
-      shell: echo "*/1 * * * * root rsync -a /data /root/owncloud_data" >> crontab
-      args:
-        chdir: /etc
-
     - name: restart crontab
       become: yes
       service:
