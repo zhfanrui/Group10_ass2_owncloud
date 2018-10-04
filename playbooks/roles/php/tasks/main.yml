@@ -14,6 +14,16 @@
     path: /etc/php/7.0/apache2/php.ini
     regexp: 'upload_max_filesize = 2M'
     replace: 'upload_max_filesize = 1024M'
+- name: confirure php.ini
+  replace:
+    path: /etc/php/7.0/apache2/php.ini
+    regexp: 'post_max_size = 8M'
+    replace: 'post_max_size = 1024M'
+- name: confirure php.ini
+  replace:
+    path: /etc/php/7.0/apache2/php.ini
+    regexp: 'memory_limit = 128M'
+    replace: 'memory_limit = 1024M'
 
 - name: install php extensions
   apt:
