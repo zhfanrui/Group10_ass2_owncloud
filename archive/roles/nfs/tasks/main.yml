@@ -11,7 +11,7 @@
 - name: get permission
 #   shell: chown -R www-data:www-data /var/www/owncloud/
   file:
-    path: /var/www/html
+    path: /var/www/owncloud
     recurse: yes
     owner: www-data
     group: www-data
@@ -20,7 +20,7 @@
 - name: add folder 1
   lineinfile:
     path: /etc/exports
-    line: "/var/www/html {{ item }}(rw,no_root_squash)"
+    line: "/var/www/owncloud {{ item }}(rw,no_root_squash)"
   with_inventory_hostnames:
     - server
 

@@ -57,7 +57,7 @@
   gluster_volume:
     state: present
     name: owncloud
-    bricks: /var/www/html
+    bricks: /var/www/owncloud
     cluster: "{% for host in groups['nfs'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }},{% endfor %}"
     force: yes
   run_once: true

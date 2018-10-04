@@ -22,15 +22,10 @@
     fstype: glusterfs
     state: mounted
 
-- name: delete html folder before symlink
-  file:
-    src: /var/www/html
-    state: absent
-
 - name: symlink the mounted directory
   file:
     src: /nfs/owncloud
-    dest: /var/www/html
+    dest: /var/www/owncloud
     owner: www-data
     group: www-data
     state: link

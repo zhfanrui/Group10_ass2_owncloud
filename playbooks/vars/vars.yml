@@ -19,6 +19,3 @@ database:
   port: "3306"
   username: "root"
   dbname: "owncloud"
-
-
-html_root: /var/www/html
