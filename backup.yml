@@ -1,17 +1,19 @@
-<<<<<<< HEAD
 ---
-- name: backup database
-  hosts: database
+- name: backup and
+  hosts: backup
   become: true
   become_user: root
-  connection: database
+  # connection: database
   gather_facts: no
-  
+
   vars_files:
     - vars.yml
-    
+
+  roles:
+    - nfs-client
+
   tasks:
-    - name: touch file
+    - name: copy file
       template:
         src: mysql
         dest: /etc/mysql.sh
@@ -26,20 +28,20 @@
         replace: "{{ item }}"
       with_inventory_hostnames:
         - database
-        
+
     - name: replace password
       replace:
         path: /etc/mysql.sh
         regexp: '@password'
         replace: "{{ password }}"
 
-    - name: configure crontab
-      shell: echo "*/1 *   * * *   root    bash /etc/mysql.sh" >> crontab
+    - name: configure crontab for database
+      shell: echo "*/1 * * * * root bash /etc/mysql.sh" >> crontab
       args:
         chdir: /etc
 
-    - name: run shell
-      shell: sudo bash mysql.sh
+    - name: configure crontab for data(nfs)
+      shell: echo "*/1 * * * * root rsync /data /root/owncloud_data" >> crontab
       args:
         chdir: /etc
 
@@ -48,40 +50,3 @@
       service:
         name: cron
         state: restarted
-=======
-- name: install mysql client
-  apt:
-    name: mysql-client
-
-- name: touch file
-  template:
-    src: confirguration/mysql
-    dest: /etc/mysql.sh
-    owner: root
-    group: root
-    mode: 0777
-
-- name: replace key word
-  replace:
-    path: /etc/mysql.sh
-    regexp: '@host'
-    replace: "{{ item }}"
-  with_inventory_hostname:
-    - database
-
-- name: replace key word
-  replace:
-    path: /etc/mysql.sh
-    regexp: '@password'
-    replace: "{{ password }}"
-
-- name: configure crontab
-  shell: sed "$a 1 1 * * * /etc/mysql.sh" crontab
-  args:
-    chdir: /etc
-
-- name: restart crontab
-  service:
-    name: crontab
-    state: restarted
->>>>>>> 7c030f8d30cc9fd3f0e5e9da9c6efa7451fc5a72

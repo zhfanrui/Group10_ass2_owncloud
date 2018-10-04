@@ -14,20 +14,8 @@
     #
     - include_tasks: tasks/instance_common.yml
     # Create a new GCP instance
-<<<<<<< HEAD
-    - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}"
-      with_items:
-#         - {name: loadbalancer, group: loadbalancer}
-#         - {name: server1, group: server}
-#         - {name: server2, group: server}
-        - {name: database, group: database}
-#         - {name: nfs, group: nfs}
-        #- {name: backup, group: backup}
-        #- {name: ldap, group: ldap}
-=======
     - include_tasks: tasks/instance.yml instance_name="{{ instances.name }}" instance_group="{{ instances.group }}" instance_tags="{{ instances.tags }}"
       with_items: "{{ instances }}"
->>>>>>> 7c030f8d30cc9fd3f0e5e9da9c6efa7451fc5a72
       loop_control:
         loop_var: instances
 
@@ -44,47 +32,6 @@
 
   roles:
     - mysql
-    
-  tasks:
-    - name: touch file
-      template:
-        src: mysql
-        dest: /etc/mysql.sh
-        owner: root
-        group: root
-        mode: 0777
-
-
-    - name: replace host
-      replace:
-        path: /etc/mysql.sh
-        regexp: '@host'
-        replace: "{{ item }}"
-      with_inventory_hostnames:
-        - database
-
-
-    - name: replace password
-      replace:
-        path: /etc/mysql.sh
-        regexp: '@password'
-        replace: "{{ password }}"
-
-    - name: configure crontab
-      shell: echo "*/1 *   * * *   root    bash /etc/mysql.sh" >> crontab
-      args:
-        chdir: /etc
-
-    - name: run shell
-      shell: sudo bash mysql.sh
-      args:
-        chdir: /etc
-
-    - name: restart crontab
-      become: yes
-      service:
-        name: cron
-        state: restarted
 
 #======================================================================================
 - hosts: nfs
