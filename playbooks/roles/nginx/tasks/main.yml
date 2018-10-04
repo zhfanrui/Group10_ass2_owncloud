@@ -4,9 +4,16 @@
     state: latest
 
 - name: download nginx configuration
-  get_url:
-    url: "https://raw.githubusercontent.com/zhfanrui/Group10_ass2_owncloud/master/configuration/nginx"
+  templates:
+    src: nginx
     dest: /etc/nginx/sites-available/nginx
+    owner: root
+    group: root
+    mode: 0777
+
+  # get_url:
+  #   url: "https://raw.githubusercontent.com/zhfanrui/Group10_ass2_owncloud/master/configuration/nginx"
+  #   dest: /etc/nginx/sites-available/nginx
 
 # use internal IPs instead of external IPs. External HTTP traffic is blocked ~ dylan
 - name: set config
