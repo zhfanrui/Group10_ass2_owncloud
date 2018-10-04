@@ -4,7 +4,7 @@
     state: latest
 
 - name: download nginx configuration
-  templates:
+  template:
     src: nginx
     dest: /etc/nginx/sites-available/nginx
     owner: root
