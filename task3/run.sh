@@ -11,7 +11,7 @@ COLOR_END='\033[0m'
 
 # help message
 usage() {
-    printf "${COLOR_INFO}Usage${COLOR_END}: bash run.sh [password] [database_host] [nfs_host]\n"
+    printf "${COLOR_INFO}Usage${COLOR_END}: bash run.sh [project_id] [password] [database_host] [nfs_host]\n"
     echo "This script doesn't create a new instance on GCP, and automatically installs Gogs."
     echo "Please note, you cannot run this script as sudo (root user)."
 }
@@ -31,13 +31,14 @@ fi
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
     echo ""
     printf "${COLOR_ERROR}Error${COLOR_END}: project_id and password arguments are required!\n"
-    echo "Please retry using sh ./run.sh <password> <database_host> <nfs_host>"
+    echo "Please retry using sh ./run.sh <project_id> <password> <database_host> <nfs_host>"
     exit
 fi
 
-password=$1
-database=$2
-nfs=$3
+project_id=$1
+password=$2
+database=$3
+nfs=$4
 
 # install latest version ansible
 sudo bash -c 'echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list'
@@ -50,4 +51,4 @@ sudo apt-get install ansible -y --allow-unauthenticated
 
 # run play book
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook main.yml --extra-vars "password=$password database=$database nfs=$nfs"
+ansible-playbook main.yml --extra-vars "project_id=$project_id password=$password database=$database_hostse nfs=$nfs"

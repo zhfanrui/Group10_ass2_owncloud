@@ -4,13 +4,13 @@
   connection: local
   gather_facts: no
 
-  # vars_files:
-  #   - vars/vars.yml
+  vars_files:
+    - vars/vars.yml
   vars:
     # what instances to create?
     instances:
       - group: backup
-        names: backup1
+        names: backup01
 
   tasks:
     # install required packages for the controller
