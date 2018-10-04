@@ -34,6 +34,7 @@ if [ -z "$1" ] || [ -z "$2" ]; then
     echo "Please retry using sh ./run.sh <database_host> <password> <file_dir>"
     exit
 fi
+
 username="owncloud"
 dbname="owncloud"
 password=$1

@@ -38,8 +38,13 @@
       args:
         chdir: /etc
 
-    - name: configure crontab for data(nfs)
-      shell: echo "*/1 * * * * root rsync /data /root/owncloud_data" >> crontab
+    - name: configure crontab for software (nfs)
+      shell: echo "*/1 * * * * root rsync -a /var/www/owncloud /root/owncloud_software" >> crontab
+      args:
+        chdir: /etc
+
+    - name: configure crontab for data (nfs)
+      shell: echo "*/1 * * * * root rsync -a /data /root/owncloud_data" >> crontab
       args:
         chdir: /etc
 
