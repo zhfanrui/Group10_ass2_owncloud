@@ -11,8 +11,8 @@ COLOR_END='\033[0m'
 
 # help message
 usage() {
-    printf "${COLOR_INFO}Usage${COLOR_END}: bash run.sh [project_id] [password] [database_host] [nfs_host]\n"
-    echo "This script creates a new instance on GCP, and automatically installs Gogs."
+    printf "${COLOR_INFO}Usage${COLOR_END}: bash run.sh [password] [database_host] [nfs_host]\n"
+    echo "This script doesn't create a new instance on GCP, and automatically installs Gogs."
     echo "Please note, you cannot run this script as sudo (root user)."
 }
 if [ "$1" == "--help" ]; then
@@ -28,17 +28,16 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 # added check for project_id & password. Without these, it will not work.
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
     echo ""
     printf "${COLOR_ERROR}Error${COLOR_END}: project_id and password arguments are required!\n"
-    echo "Please retry using sh ./run.sh <project_id> <password> <database_host> <nfs_host>"
+    echo "Please retry using sh ./run.sh <password> <database_host> <nfs_host>"
     exit
 fi
 
-project_id=$1
-password=$2
-database=$3
-nfs=$4
+password=$1
+database=$2
+nfs=$3
 
 # install latest version ansible
 sudo bash -c 'echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list'
@@ -47,8 +46,8 @@ sudo apt-get update
 sudo apt-get install ansible -y --allow-unauthenticated
 
 # generate ssh key
-ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa
+# ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa
 
 # run play book
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook main.yml --extra-vars "project_id=$project_id password=$password database=$database nfs=$nfs"
+ansible-playbook main.yml --extra-vars "password=$password database=$database nfs=$nfs"

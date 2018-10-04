@@ -17,11 +17,9 @@
 - name: mount
   mount:
     path: /var/www/owncloud
-    src: "{{ item }}:/owncloud"
+    src: "{{ nfs }}:/owncloud"
     fstype: glusterfs
     state: mounted
-  with_inventory_hostnames:
-    - nfs
 
 - name: get permission
 #   shell: chown -R www-data:www-data /var/www/owncloud/
