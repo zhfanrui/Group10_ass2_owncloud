@@ -5,16 +5,15 @@
 
 - name: download nginx configuration
   get_url:
-    url: "https://raw.githubusercontent.com/yimingzenmedi/owncloud/master/configuration/nginx"
+    url: "https://raw.githubusercontent.com/zhfanrui/Group10_ass2_owncloud/master/configuration/nginx"
     dest: /etc/nginx/sites-available/nginx
 
-
+# use internal IPs instead of external IPs. External HTTP traffic is blocked ~ dylan
 - name: set config
-  shell: sed -i "3i server {{ item }};" nginx
+  shell: sed -i "3i server {{ hostvars[item]['ansible_default_ipv4']['address'] }};" nginx
   args:
     chdir: /etc/nginx/sites-available/
-  with_inventory_hostnames:
-    - webserver
+  with_items: groups['webserver']
 
 #     - name: replace new_ip_1
 #       replace:
