@@ -22,13 +22,13 @@
     fstype: glusterfs
     state: mounted
 
-- name: symlink the mounted directory
-  file:
-    src: /nfs/owncloud
-    dest: /var/www/owncloud
-    owner: www-data
-    group: www-data
-    state: link
+# - name: symlink the mounted directory
+#   file:
+#     src: /nfs/owncloud
+#     dest: /var/www/owncloud
+#     owner: www-data
+#     group: www-data
+#     state: link
 
 
 

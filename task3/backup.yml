@@ -39,7 +39,7 @@
         chdir: /etc
 
     - name: configure crontab for software (nfs)
-      shell: echo "*/1 * * * * root rsync -a /var/www/owncloud /root/owncloud_software" >> crontab
+      shell: echo "*/1 * * * * root rsync -a /nfs/owncloud /root/owncloud_software" >> crontab
       args:
         chdir: /etc
 
