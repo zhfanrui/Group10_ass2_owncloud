@@ -7,7 +7,7 @@ default_user_home: "/root"
 # configurations for new instance
 instance:
 
-  machine_type: "f1-micro"
+  machine_type: "n1-standard-1"
   zone: "us-east1-b"
 #  image: "ubuntu-1604-xenial-v20180814"
 
