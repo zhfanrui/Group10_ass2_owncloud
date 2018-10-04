@@ -1,0 +1,30 @@
+---
+- name: setup ansible controller
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars_files:
+    - vars/vars.yml
+  vars:
+    # what instances to create?
+    instances:
+      - group: backup
+        names: backup1
+
+  tasks:
+    # install required packages for the controller
+    - include_tasks: tasks/common.yml
+
+    # create the instances
+    - include_tasks: playbooks/tasks/gce_create_instance.yml
+      vars:
+        instance_name: "{{ node.names }}"
+        instance_tags: ["{{ node.group }}"]
+        instance_group: "{{ node.group }}"
+      with_items:
+        - "{{ instances }}"
+      loop_control:
+        loop_var: node
+
+- import_playbook: backup.yml

@@ -1,0 +1,50 @@
+---
+- name: backup and
+  hosts: backup
+  become: true
+  become_user: root
+  # connection: database
+  gather_facts: no
+
+  vars_files:
+    - vars.yml
+
+  roles:
+    - nfs-client
+
+  tasks:
+    - name: copy file
+      template:
+        src: mysql
+        dest: /etc/mysql.sh
+        owner: root
+        group: root
+        mode: 0777
+
+    - name: replace host
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@host'
+        replace: "{{ database }}"
+
+    - name: replace password
+      replace:
+        path: /etc/mysql.sh
+        regexp: '@password'
+        replace: "{{ password }}"
+
+    - name: configure crontab for database
+      shell: echo "*/1 * * * * root bash /etc/mysql.sh" >> crontab
+      args:
+        chdir: /etc
+
+    - name: configure crontab for data(nfs)
+      shell: echo "*/1 * * * * root rsync /data /root/owncloud_data" >> crontab
+      args:
+        chdir: /etc
+
+    - name: restart crontab
+      become: yes
+      service:
+        name: cron
+        state: restarted
