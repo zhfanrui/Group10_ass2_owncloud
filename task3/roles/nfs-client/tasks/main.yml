@@ -2,7 +2,7 @@
   apt:
     name: glusterfs-client
 
-- name: install gluster client
+- name: install attr
   apt:
     name: attr
 
