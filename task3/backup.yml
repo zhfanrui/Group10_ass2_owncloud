@@ -7,7 +7,7 @@
   gather_facts: no
 
   vars_files:
-    - vars.yml
+    - vars/vars.yml
 
   roles:
     - nfs-client

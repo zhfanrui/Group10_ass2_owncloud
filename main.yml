@@ -4,7 +4,6 @@
 
   vars_files:
     - vars.yml
-
   connection: local
   gather_facts: no
 
