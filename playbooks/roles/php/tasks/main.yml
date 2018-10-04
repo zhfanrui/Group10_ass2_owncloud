@@ -11,7 +11,7 @@
 
 - name: confirure php.ini
   replace:
-    path: /etc/php/7.0/cli/php.ini
+    path: /etc/php/7.0/apache2/php.ini
     regexp: 'upload_max_filesize = 2M'
     replace: 'upload_max_filesize = 1024M'
 
