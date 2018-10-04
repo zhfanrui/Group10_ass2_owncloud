@@ -47,7 +47,7 @@ sudo apt-get update
 sudo apt-get install ansible -y --allow-unauthenticated
 
 # generate ssh key
-# ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa
+ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa
 
 # run play book
 export ANSIBLE_HOST_KEY_CHECKING=False
