@@ -7,7 +7,7 @@
     - mysql
 2. Setup nfs-server.
     - php
-    - owncloud (/var/www/owncloud)
+    - owncloud (/var/www/html)
     - xfsprogs
     - glusterfs-server
 4. Setup 2 web servers.

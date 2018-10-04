@@ -16,7 +16,7 @@
 # sudo mount -t nfs 35.237.213.137:/vars/www/owncloud /vars/www/owncloud
 - name: mount
   mount:
-    path: /var/www/owncloud
+    path: /var/www/html
     src: "{{ nfs }}:/owncloud"
     fstype: glusterfs
     state: mounted
@@ -24,7 +24,7 @@
 - name: get permission
 #   shell: chown -R www-data:www-data /var/www/owncloud/
   file:
-    path: /var/www/owncloud/
+    path: /var/www/html/
     recurse: yes
     owner: www-data
     group: www-data

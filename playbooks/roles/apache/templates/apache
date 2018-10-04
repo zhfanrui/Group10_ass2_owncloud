@@ -1,10 +1,10 @@
-Alias /owncloud "/var/www/owncloud/"
-<Directory /var/www/owncloud/>
+Alias /owncloud "/var/www/html"
+<Directory /var/www/html>
   Options +FollowSymlinks
   AllowOverride All
  <IfModule mod_dav.c>
   Dav off
  </IfModule>
- SetEnv HOME /var/www/owncloud
- SetEnv HTTP_HOME /var/www/owncloud
+ SetEnv HOME /var/www/html
+ SetEnv HTTP_HOME /var/www/html
 </Directory>

@@ -8,11 +8,16 @@
         update_cache: yes
   run_once: true # only run on one host
 
+- name: remove everything from DocumentRoot
+  file:
+    state: absent
+    path: /var/www/html/
+
 - name: occ - maintenance:install
   ignore_errors: yes
   shell: sudo -u www-data php occ maintenance:install --database="Mysql" --database-name="owncloud" --database-host="{{ item }}" --database-user="owncloud" --database-pass="{{ password }}" --admin-user="owncloud" --admin-pass="{{ password }}"
   args:
-    chdir: /var/www/owncloud
+    chdir: /var/www/html
   with_inventory_hostnames:
     - database
 
@@ -20,7 +25,7 @@
 #   shell: sed -i "8c 0 => '{{ ipify_public_ip }}'," /var/www/owncloud/config/config.php
 
 - name: add loadbalancers to trusted proxies in owncloud config
-  shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/owncloud/config/config.php
+  shell: sed -i "3c 'trusted_proxies' => ['{{ item }}'], 'overwritehost' => '{{ item }}', 'overwriteprotocol' => 'http', " /var/www/html/config/config.php
   with_inventory_hostnames:
     - loadbalancer
   run_once: true
