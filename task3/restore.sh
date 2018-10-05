@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 
-# run WITHOUT sudo!
+# run WITH sudo!
 
 # colours
 COLOR_INFO='\033[0;36m'
@@ -40,4 +40,4 @@ password=$1
 database=$2
 file_dir=$3
 
-mysql -u$username -p$password -database_host $dbname < gzip -d file_dir
+sudo gzip -dc file_dir > mysql -u$username -p$password -database_host $dbname
