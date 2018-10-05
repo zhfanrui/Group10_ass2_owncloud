@@ -1,6 +1,6 @@
-upstream  new_servers  
+upstream  new_servers
 {
-   
+
     ip_hash;
 }
 
@@ -8,9 +8,9 @@ server
 {
     listen  80;
     server_name @ip_address;
- 
+
     location / {
         proxy_pass http://new_servers ;
-       
+        client_max_body_size 2G;
     }
 }
