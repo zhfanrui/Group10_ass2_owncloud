@@ -12,7 +12,6 @@ COLOR_END='\033[0m'
 # help message
 usage() {
     printf "${COLOR_INFO}Usage${COLOR_END}: bash run.sh [project_id] [password] [database_host] [nfs_host]\n"
-    echo "This script doesn't create a new instance on GCP, and automatically installs Gogs."
     echo "Please note, you cannot run this script as sudo (root user)."
 }
 if [ "$1" == "--help" ]; then
