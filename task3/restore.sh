@@ -20,9 +20,9 @@ if [ "$1" == "--help" ]; then
 fi
 
 # checks that the user is not root, root has UID of 0
-if [ "$EUID" -eq 0 ]; then
+if [ "$EUID" -ne 0 ]; then
     echo ""
-    printf "${COLOR_ERROR}Error${COLOR_END}: please do not run this script as root.\n"
+    printf "${COLOR_ERROR}Error${COLOR_END}: please run this script as root.\n"
     exit
 fi
 
@@ -30,7 +30,7 @@ fi
 if [ -z "$1" ] || [ -z "$2" ]; then
     echo ""
     printf "${COLOR_ERROR}Error${COLOR_END}: project_id and password arguments are required!\n"
-    echo "Please retry using sh ./run.sh <database_host> <password> <file_dir>"
+    echo "Please retry using sh ./restore.sh <database_host> <password> <file_dir>"
     exit
 fi
 
