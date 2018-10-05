@@ -34,12 +34,12 @@
         replace: "{{ password }}"
 
     - name: configure crontab for database
-      shell: echo "*/1 * * * * root bash /etc/mysql.sh" >> crontab
+      shell: echo "* */1 * * * root bash /etc/mysql.sh" >> crontab
       args:
         chdir: /etc
 
     - name: configure crontab for software (nfs)
-      shell: echo "*/1 * * * * root rsync -a /nfs/owncloud /root/owncloud_software" >> crontab
+      shell: echo "* */1 * * * root rsync -a /nfs/owncloud /root/owncloud_software" >> crontab
       args:
         chdir: /etc
 
