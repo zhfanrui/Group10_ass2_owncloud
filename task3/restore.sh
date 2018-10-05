@@ -12,8 +12,7 @@ COLOR_END='\033[0m'
 # help message
 usage() {
     printf "${COLOR_INFO}Usage${COLOR_END}: bash restore.sh [database_host] [password] [file_dir]\n"
-    # echo "This script creates a new instance on GCP, and automatically installs Gogs."
-    # echo "Please note, you cannot run this script as sudo (root user)."
+    echo "Please note, you cannot run this script as sudo (root user)."
 }
 if [ "$1" == "--help" ]; then
     usage
