@@ -11,7 +11,7 @@ COLOR_END='\033[0m'
 
 # help message
 usage() {
-    printf "${COLOR_INFO}Usage${COLOR_END}: sudo bash restore.sh [database_host] [password] [file_dir]\n"
+    printf "${COLOR_INFO}Usage${COLOR_END}: sudo bash restore.sh [password] [database_host] [file_dir]\n"
     echo "Please note, you may need run this script as sudo (root user) depending what you put as file_dir."
     echo "Also note, you must use an internal IP of a database host."
 }
@@ -31,7 +31,7 @@ fi
 if [ -z "$1" ] || [ -z "$2" ]; then
     echo ""
     printf "${COLOR_ERROR}Error${COLOR_END}: project_id and password arguments are required!\n"
-    echo "Please retry using sh ./restore.sh <database_host> <password> <file_dir>"
+    echo "Please retry using sh ./restore.sh <password> <database_host> <file_dir>"
     exit
 fi
 
@@ -41,4 +41,7 @@ password=$1
 database=$2
 file_dir=$3
 
-sudo gzip -dc file_dir > mysql -u$username -p$password -database_host $dbname
+gzip -dc $file_dir > backup.sql
+mysql -u$username -p$password -h $database -e 'DROP DATABASE owncloud; CREATE DATABASE owncloud;'
+mysql -u$username -p$password -h $database $dbname < backup.sql
+rm -f backup.sql

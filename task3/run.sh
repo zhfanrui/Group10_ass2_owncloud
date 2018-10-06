@@ -36,7 +36,7 @@ fi
 
 project_id=$1
 password=$2
-database=$3
+database_host=$3
 nfs=$4
 
 # install latest version ansible
@@ -50,4 +50,4 @@ ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa
 
 # run play book
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook main.yml --extra-vars "project_id=$project_id password=$password database=$database_hostse nfs=$nfs"
+ansible-playbook main.yml --extra-vars "project_id=$project_id password=$password database_host=$database_host nfs=$nfs"
