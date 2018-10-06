@@ -11,18 +11,12 @@ COLOR_END='\033[0m'
 
 # help message
 usage() {
-    printf "${COLOR_INFO}Usage${COLOR_END}: bash restore.sh [database_host] [password] [file_dir]\n"
-    echo "Please note, you cannot run this script as sudo (root user)."
+    printf "${COLOR_INFO}Usage${COLOR_END}: sudo bash restore.sh [database_host] [password] [file_dir]\n"
+    echo "Please note, you may need run this script as sudo (root user) depending what you put as file_dir."
+    echo "Also note, you must use an internal IP of a database host."
 }
 if [ "$1" == "--help" ]; then
     usage
-    exit
-fi
-
-# checks that the user is not root, root has UID of 0
-if [ "$EUID" -eq 0 ]; then
-    echo ""
-    printf "${COLOR_ERROR}Error${COLOR_END}: please do not run this script as root.\n"
     exit
 fi
 
@@ -30,7 +24,7 @@ fi
 if [ -z "$1" ] || [ -z "$2" ]; then
     echo ""
     printf "${COLOR_ERROR}Error${COLOR_END}: project_id and password arguments are required!\n"
-    echo "Please retry using sh ./run.sh <database_host> <password> <file_dir>"
+    echo "Please retry using sh ./run.sh <database_host> <password> <file path of backup>"
     exit
 fi
 
