@@ -1,0 +1,4 @@
+1. Login to backup server.
+2. Download the restore script.
+3. cd /root/mysql_dump/data to view which version of data you want to restore.
+4. run `sudo restore.sh <database_host> <password> <file_dir>` to restore the database to a new server (database user must be created first).

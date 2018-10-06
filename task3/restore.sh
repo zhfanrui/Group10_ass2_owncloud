@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 
-# run WITHOUT sudo!
+# run WITH sudo!
 
 # colours
 COLOR_INFO='\033[0;36m'
@@ -20,11 +20,18 @@ if [ "$1" == "--help" ]; then
     exit
 fi
 
+# checks that the user is not root, root has UID of 0
+if [ "$EUID" -ne 0 ]; then
+    echo ""
+    printf "${COLOR_ERROR}Error${COLOR_END}: please run this script as root.\n"
+    exit
+fi
+
 # added check for project_id & password. Without these, it will not work.
 if [ -z "$1" ] || [ -z "$2" ]; then
     echo ""
     printf "${COLOR_ERROR}Error${COLOR_END}: project_id and password arguments are required!\n"
-    echo "Please retry using sh ./run.sh <database_host> <password> <file path of backup>"
+    echo "Please retry using sh ./restore.sh <database_host> <password> <file_dir>"
     exit
 fi
 
@@ -34,4 +41,4 @@ password=$1
 database=$2
 file_dir=$3
 
-mysql -u$username -p$password -database_host $dbname < gzip -d file_dir
+sudo gzip -dc file_dir > mysql -u$username -p$password -database_host $dbname
