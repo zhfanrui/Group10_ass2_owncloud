@@ -18,7 +18,7 @@
 - name: mount the NFS
   mount:
     path: /nfs/owncloud/
-    src: "{{ groups['nfs'][0] }}:/owncloud" # only for one server, not multiple
+    src: "{{ hostvars[groups['nfs'][0]]['ansible_default_ipv4']['address'] }}:/owncloud" # only for one server, not multiple
     fstype: glusterfs
     state: mounted
 
