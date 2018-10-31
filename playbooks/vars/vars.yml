@@ -8,7 +8,7 @@ default_user_home: "/root"
 instance:
 
   machine_type: "n1-standard-1"
-  zone: "us-east1-b"
+  zone: "asia-east1-b"
 #  image: "ubuntu-1604-xenial-v20180814"
 
   # machine_type: "n1-standard-1"
