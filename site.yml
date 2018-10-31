@@ -46,6 +46,8 @@
         loop_var: node
     - name: show
       debug: var=hostvars
+    - name: show
+      debug: var=groups
     - name: create disk(s)
       include_tasks: playbooks/tasks/gce_create_volume.yml
       vars:
