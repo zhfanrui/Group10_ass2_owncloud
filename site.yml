@@ -44,7 +44,8 @@
         - "{{ instances }}"
       loop_control:
         loop_var: node
-
+    - name: show
+      debug: var=hostvars
     - name: create disk(s)
       include_tasks: playbooks/tasks/gce_create_volume.yml
       vars:
