@@ -48,6 +48,8 @@
       debug: var=hostvars
     - name: show
       debug: var=groups
+    - name: show
+      debug: var=ansible_all_ipv4_addresses
     - name: create disk(s)
       include_tasks: playbooks/tasks/gce_create_volume.yml
       vars:
