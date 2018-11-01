@@ -2,7 +2,7 @@
   apt:
     name: glusterfs-client
 
-- name: install attr
+- name: install gluster client
   apt:
     name: attr
 
@@ -18,17 +18,17 @@
 - name: mount the NFS
   mount:
     path: /nfs/owncloud/
-    src: "{{ nfs }}:/owncloud" # only for one server, not multiple
+    src: "{{ hostvars[groups['nfs'][0]]['ansible_default_ipv4']['address'] }}:/owncloud" # only for one server, not multiple
     fstype: glusterfs
     state: mounted
 
-# - name: symlink the mounted directory
-#   file:
-#     src: /nfs/owncloud
-#     dest: /var/www/owncloud
-#     owner: www-data
-#     group: www-data
-#     state: link
+- name: symlink the mounted directory
+  file:
+    src: /nfs/owncloud
+    dest: /var/www/owncloud
+    owner: www-data
+    group: www-data
+    state: link
 
 
 
